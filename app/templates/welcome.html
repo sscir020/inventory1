@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+{% if session['userid']!= None %}
+<h1>欢迎 {{session['username']}}</h1>
+{% else %}
+<h1>欢迎匿名用户</h1>
+{% endif %}
+{% endblock %}
+

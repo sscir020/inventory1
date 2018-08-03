@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block page_content %}
+<div>
+    <h4>客户列表</h4>
+    <form name="form_client" method="post" >
+         <table  class="table table-hover" id="table_orange">
+             <thead>
+                 <th>客户ID</th>
+                 <th>客户名</th>
+                 <th>MN号</th>
+                 <th>客户信用</th>
+                 <th>备注(请勾选右侧)</th>
+             </thead>
+             {% for entry in clients %}
+             <tr>
+                 <td>{{entry.client_id}}</td>
+                 <td>{{entry.client_name}}</td>
+                 <td>{{entry.MN_id}}</td>
+                 <td>{{entry.credit}}</td>
+                 <td><input class="text_comment" type="text" name="input_comment_{{entry.client_id}}_0" value="{{entry.comment}}">
+                     <input type="checkbox" name="input_checkbox_comment" value="{{entry.client_id}}_0"></td>
+             </tr>
+             {% endfor %}
+         </table>
+        <input type="submit" value="备注提交" onclick="form_client.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.CLIENT.name) }}';form_client.submit()">
+    </form>
+</div>
+{% endblock %}

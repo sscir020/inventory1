@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block page_content %}
+<form action="{{ url_for('ctr.add_device') }}" method="post">
+    <p>设备名称<input type="text" name="input_text_device_name"></p>
+    <p>设备MN号<input type="text" name="input_text_MN"></p>
+    <p>设备类型<input type="text" name="input_text_device_type"></p>
+    <!--<p>数量<input type="number" name="input_number_countnum" value=0></p>-->
+    <!--<p>警戒值<input type="number" name="input_number_alarm_level" value=20></p>-->
+    <p>每个设备出库的配件个数：</p>
+    <ul id="accessory_list">
+    {% for item in materials %}
+         <li><input type="checkbox" name="input_accessory_check_{{item.material_id}}" value="{{item.material_id}}">
+         {{item.material_name}}<input type="number" name="input_accessory_num_{{item.material_id}}" class="text_acce" value="1" min='1'></li>
+    {% endfor %}
+    </ul>
+    <input type="submit" value="新添加提交">
+</form>
+{% endblock %}
+

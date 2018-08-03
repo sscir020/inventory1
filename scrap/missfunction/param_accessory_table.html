@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+<div>
+    <h4>出库参数模板列表</h4>
+    <table class="table table-hover" id="table_orange"><!--table-condensed-->
+         <thead>
+             <th>参数模板ID</th>
+             <th>参数数量</th>
+             <th>配件ID:配件数量-集合</th>
+         </thead>
+         {% for entry in accessories %}
+         <tr>
+             <td>{{entry.acces_id}}</td>
+             <td>{{entry.param_num}}</td>
+             <td>
+                  {% set acces= json.loads(entry.param_acces)  %}
+                 <!--{{acces}}-->
+                  {% for key in acces %}
+                 <!--{{key}}-->
+                      {% set m=dbsession.query(Material).filter_by(material_id=(key|int)).first() %}
+                      {{m.material_name}}:{{acces[key]}}&nbsp;&nbsp;&nbsp;
+
+                  {% endfor %}
+             </td>
+         </tr>
+         {% endfor %}
+    </table>
+</div>
+
+
+
+{% endblock %}
+
+
+
+

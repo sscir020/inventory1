@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block page_content %}
+<div>
+    <h4>售后列表</h4>
+    <form name="form_customerservice" method="post" >
+        {{form.customerservice_id}}
+        {{form.diff}}
+        {{form.oprtype}}
+        {{form.comment}}
+        {{form.submit}}
+    </form>
+     <table  class="table table-hover" id="table_orange">
+         <thead>
+             <th>售后ID</th>
+             <th>材料ID</th>
+             <th>设备ID</th>
+             <th>MN号</th>
+             <th>初始数量</th>
+             <th>完好数量</th>
+             <th>损坏数量</th>
+             <th>返修数量</th>
+             <th>修好数量</th>
+             <th>报废数量</th>
+             <th>入库数量</th>
+             <th>售后售出数量</th>
+             <th>售后售出费用</th>
+             <th>已经售出</th>
+         </thead>
+         {% for entry in customerservice %}
+         <tr>
+             <td>{{entry.service_id}}</td>
+             <td>{% if entry.material_id != None %}
+                 {{entry.material_id}}
+                 {% endif %}
+             </td>
+             <td>{% if entry.device_id != None %}
+                 {{entry.device_id}}
+                 {% endif %}
+             </td>
+             <td>{{entry.MN_id}}</td>
+             <td>{{entry.originnum}}</td>
+             <td>{{entry.goodnum}}</td>
+             <td>{{entry.brokennum}}</td>
+             <td>{{entry.reworknum}}</td>
+             <td>{{entry.restorenum}}</td>
+             <td>{{entry.scrapnum}}</td>
+             <td>{{entry.inboundnum}}</td>
+             <td>{{entry.resalenum}}</td>
+             <td>{{entry.fee}}</td>
+             <td>{{entry.isold}}</td>
+         </tr>
+         {% endfor %}
+     </table>
+
+</div>
+{% endblock %}

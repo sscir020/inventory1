@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block page_content %}
+<div>
+ <table id="table_orange">
+     <thead>
+         <th>用户ID</th>
+         <th>用户名</th>
+         <th>用户密码</th>
+         <th>用户角色</th>
+     </thead>
+     {% for entry in users %}
+     <tr>
+         <td>{{entry.user_id}}</td>
+         <td>{{entry.user_name}}</td>
+         <td>{{entry.user_pass}}</td>
+         <td>{{entry.role}}</td>
+     </tr>
+     {% endfor %}
+    </table>
+</div>
+{% endblock %}

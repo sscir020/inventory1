@@ -1,0 +1,35 @@
+
+Httpd.conf
+
+
+LoadModule wsgi_module modules/mod_wsgi.pyd
+
+
+Listen 6001
+<VirtualHost *:6001 >
+	Alias /static "D:\projects\inventory2\app\static"
+	<Directory "D:\projects\inventory2\app\static">
+		Require all granted
+	</Directory>
+
+	ServerAdmin 3471318547@qq.com
+	DocumentRoot "D:\projects\inventory2"
+	ServerName  www.osen-inventory2.com
+	ServerAlias       *.osen-inventory2.com
+	WSGIScriptAlias / "D:\projects\inventory2\main_run.wsgi"
+	<Directory "D:\projects\inventory2">
+		#Options Indexes FollowSymLinks
+		<Files main_run.wsgi>
+			Require all granted
+
+		</Files>
+		Options +indexes
+		AllowOverride All
+		Order allow,deny
+		Allow from all
+		Require all granted
+		Require host ip
+	</Directory>
+</VirtualHost>
+
+

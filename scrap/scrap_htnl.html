@@ -1,0 +1,136 @@
+<li><a href="{{url_for('ctr.show_add_device')}}">添加新设备</a></li>
+                <li><a href="{{url_for('ctr.add_client')}}"> 添加新客户</a></li>
+<li><a href="{{url_for('ctr.show_client_table')}}"> 客户列表</a></li>
+                <li><a href="{{url_for('ctr.show_param_accessory')}}">出库参数模板列表</a></li>
+
+
+               <td><input type="number" class="text_acce" name="input_number_{{entry.material_id}}_{{entry.batch}}" min="1"></td>
+                     <td>
+                         <input id="numcls3"  name="input_oprlist_{{entry.material_id}}_{{entry.batch}}"  list="operations" >
+                         <datalist id="operations">
+                             <option value="入库">
+                             <option value="取消购买">
+                        </datalist>
+                     </td>
+                     <td><input class="text_comment" type="text" name="input_comment_{{entry.material_id}}_{{entry.batch}}" value="{{entry.comment}}">
+                          <input type="checkbox" name="input_checkbox_comment" value="{{entry.material_id}}_{{entry.batch}}" ></td>
+                 </tr>
+             {% endfor %}
+         </table>
+         <!--<input type="submit" name="input_submit_cancel" value="取消订单提交" onclick="form_buy.action='{{ url_for('ctr.form_change_buy') }}';form_buy.submit()">-->
+         <input type="submit" name="input_submit_opr" value="操作提交" onclick="form_buy.action='{{ url_for('ctr.form_change_buy') }}';form_buy.submit()">
+         <input type="submit" name="input_submit_comment" value="备注提交" onclick="form_buy.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.BUY.name) }}';form_buy.submit()">
+
+                 <!--<th>备注选择</th>-->
+<!--{% set index=loop.index %}-->
+
+              <td><input type="number" name="input_number_{{entry.service_id}}_{{entry.material_id}}_{{entry.MN_id}}" min='1' max="{{entry.originnum}}" class="text_acce">
+                    <input name="input_oprlist_{{entry.service_id}}_{{entry.material_id}}_{{entry.MN_id}}"  list="operations1" >
+                    <datalist id="operations1">
+                         <option value="设备售后售出">
+                         <option value="售后损坏">
+                         <option value="售后返修">
+                         <option value="材料售后完好入库">
+                         <option value="材料售后修好入库">
+                         <option value="增加售后售出费用">
+                    </datalist>
+                 </td>
+                 <td><input class="text_comment" type="text" name="input_comment_{{entry.service_id}}_{{entry.material_id}}_{{entry.MN_id}}" value="{{entry.comment}}">
+                     <input type="checkbox" name="input_checkbox_comment" value="{{entry.service_id}}_{{entry.material_id}}_{{entry.MN_id}}"></td>
+             </tr>
+             {% endfor %}
+         </table>
+         <input type="submit" name="input_submit_customerservice" value="操作提交" onclick="form_customerservice.action='{{ url_for('ctr.form_change_customerservice') }}';form_customerservice.submit()">
+         <!--<input type="submit" value="备注提交" onclick="form_customerservice.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.CUSTOMERSERVICE.name) }}';form_customerservice.submit()">-->
+         <input type="submit" value="备注提交" onclick="form_customerservice.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.CUSTOMERSERVICE.name) }}';form_customerservice.submit()">
+
+
+
+
+
+
+                 <td><input type="number" name="input_number_{{entry.device_id}}_{{entry.MN_id}}" class="text_acce" min='1'></td>
+                 <td>
+                     <input id="numcls3"  name="input_oprlist_{{entry.device_id}}_{{entry.MN_id}}"  list="operations" >
+                     <datalist id="operations">
+                         <option value="设备备货">
+                         <option value="设备售后带回">
+                         <option value="设备出库">
+                     </datalist>
+                 </td>
+                 <td><input type="text" class="text_comment"  name="input_comment_{{entry.device_id}}_{{entry.MN_id}}" value="{{entry.comment}}">
+                     <input type="checkbox" name="input_checkbox_comment" value="{{entry.device_id}}_{{entry.MN_id}}"></td>
+             </tr>
+             {% endfor %}
+        </table>
+        <input type="submit" name="input_submit_opr" value="操作提交" onclick="form_device.action='{{ url_for('ctr.form_change_device') }}';form_device.submit()">
+        <input type="submit" name="input_submit_comment" value="备注提交" onclick="form_device.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.DEVICE.name) }}';form_device.submit()">
+
+
+                 <!--<td>-->
+                     <!--<input id="numcls1"  name="input_number_{{entry.material_id}}" type="number" class="text_acce" min='1'>-->
+                     <!--<input id="numcls3"  name="input_oprlist_{{entry.material_id}}"  list="operations" >-->
+                     <!--<datalist id="operations">-->
+                         <!--<option value="购买">-->
+                         <!--<option value="返修">-->
+                         <!--<option value="备货">-->
+                         <!--<option value="出库">-->
+                         <!--<option value="修好入库">-->
+                         <!--<option value="售后带回">-->
+                         <!--<option value="售后带出">-->
+                    <!--</datalist>-->
+                     <!--<input id="numcls2"  name="input_text_MN_{{entry.material_id}}" type="text" class="text_MN">-->
+                 <!--</td>-->
+
+    <!--<input name="input_sbumit" type="submit" value="提交操作">-->
+
+
+
+
+
+
+<td<input type="number" class="text_acce" name="input_number_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" min='1'></td>
+                     <td>
+                         <input   name="input_oprlist_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}"  list="operations" >
+                         <datalist id="operations">
+                            {% set mn=MN_id %}
+                            {% set id=material_id %}
+                             {% if id==None %}
+                                <option value="qwert">
+                             {% endif %}
+                             <option value="售后修好">
+                             <option value="售后报废">
+                             <option value="修好">
+                             <option value="报废">
+                        </datalist>
+                     </td>
+                     <td><input class="text_comment" type="text" name="input_comment_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" value="{{entry.comment}}">
+                         <input type="checkbox" name="input_checkbox_comment" value="{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" ></td>
+                 </tr>
+             {% endfor %}
+         </table>
+
+         <input type="submit" name="input_submit_act" value="操作提交"      onclick="form_rework.action='{{ url_for('ctr.form_change_rework') }}';form_rework.submit()">
+         <input type="submit" name="input_submit_comment" value="备注提交"      onclick="form_rework.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.REWORK.name) }}';form_rewo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

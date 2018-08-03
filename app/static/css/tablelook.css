@@ -1,0 +1,55 @@
+#table_orange
+{
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	width:1280px;
+	border-collapse:collapse;
+}
+#table_orange th
+{
+	font-size:1.1em;
+	text-align:center;
+	padding-top:15px;
+	padding-bottom:15px;
+	background-color:#FF9975;
+	border-radius: 10px;
+	color:#F0E9E6;
+}
+#table_orange td
+{
+	font-size:1em;
+	border:1px solid #FF9975;
+	padding:3px 0px 1px 3px;
+	border-radius: 5px;
+	color: #7D7775;
+}
+.text_acce{
+    width:50px;
+}
+.text_comment{
+    width:280px;
+}
+.text_MN{
+    width:190px;
+}
+a
+{
+	color:#7FB56E;
+	font-weight:bold;
+}
+#accessory_list
+{
+    width:1980px;
+    overflow:hidden;
+}
+#accessory_list ul
+{
+    width:120%;
+    overflow:hidden;
+}
+#accessory_list li
+{
+    float:left;
+    padding:0;
+    margin:0 0 0 40px;
+    list-style-type: decimal;
+}

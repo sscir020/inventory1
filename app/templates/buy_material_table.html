@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+<div>
+    <h4>购买列表</h4>
+    <form name="form_buy" method="post">
+        {{form.buy_id}}
+        {{form.diff}}
+        {{form.oprtype}}
+        {{form.comment}}
+        {{form.submit}}
+    </form>
+     <table class="table table-hover" id="table_orange"><!--table-condensed-->
+         <thead>
+             <th>购买ID</th>
+             <th>库存ID</th>
+             <th>库存名称</th>
+             <th>购买批次</th>
+             <th>购买数量</th>
+         </thead>
+         {% for entry in buybatches %}
+             <tr>
+                 <td>{{entry.buy_id}}</td>
+                 <td>{{entry.material_id}}</td>
+                 <td>{{entry.material_name}}</td>
+                 <td>{{entry.batch}}</td>
+                 <td>{{entry.num}}</td>
+             </tr>
+         {% endfor %}
+     </table>
+</div>
+{% endblock %}
+
+
+
+

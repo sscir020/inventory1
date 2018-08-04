@@ -89,36 +89,61 @@
 
 
 
-<td<input type="number" class="text_acce" name="input_number_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" min='1'></td>
-                     <td>
-                         <input   name="input_oprlist_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}"  list="operations" >
-                         <datalist id="operations">
-                            {% set mn=MN_id %}
-                            {% set id=material_id %}
-                             {% if id==None %}
-                                <option value="qwert">
-                             {% endif %}
-                             <option value="售后修好">
-                             <option value="售后报废">
-                             <option value="修好">
-                             <option value="报废">
-                        </datalist>
-                     </td>
-                     <td><input class="text_comment" type="text" name="input_comment_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" value="{{entry.comment}}">
-                         <input type="checkbox" name="input_checkbox_comment" value="{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" ></td>
-                 </tr>
-             {% endfor %}
-         </table>
+<!--<td<input type="number" class="text_acce" name="input_number_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" min='1'></td>-->
+                     <!--<td>-->
+                         <!--<input   name="input_oprlist_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}"  list="operations" >-->
+                         <!--<datalist id="operations">-->
+                            <!--{% set mn=MN_id %}-->
+                            <!--{% set id=material_id %}-->
+                             <!--{% if id==None %}-->
+                                <!--<option value="qwert">-->
+                             <!--{% endif %}-->
+                             <!--<option value="售后修好">-->
+                             <!--<option value="售后报废">-->
+                             <!--<option value="修好">-->
+                             <!--<option value="报废">-->
+                        <!--</datalist>-->
+                     <!--</td>-->
+                     <!--<td><input class="text_comment" type="text" name="input_comment_{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" value="{{entry.comment}}">-->
+                         <!--<input type="checkbox" name="input_checkbox_comment" value="{{entry.material_id}}_{{entry.batch}}_{{entry.service_id}}_{{entry.MN_id}}" ></td>-->
+                 <!--</tr>-->
+             <!--{% endfor %}-->
+         <!--</table>-->
 
-         <input type="submit" name="input_submit_act" value="操作提交"      onclick="form_rework.action='{{ url_for('ctr.form_change_rework') }}';form_rework.submit()">
-         <input type="submit" name="input_submit_comment" value="备注提交"      onclick="form_rework.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.REWORK.name) }}';form_rewo
-
-
+         <!--<input type="submit" name="input_submit_act" value="操作提交"      onclick="form_rework.action='{{ url_for('ctr.form_change_rework') }}';form_rework.submit()">-->
+         <!--<input type="submit" name="input_submit_comment" value="备注提交"      onclick="form_rework.action='{{ url_for('ctr.form_change_comment',comment_type=CommentType.REWORK.name) }}';form_rewo-->
 
 
 
+             <!--<td>-->
+                 <!--{% set a=db.session.query(Accessory).filter_by(acces_id=(entry.acces_id|int)).first() %}-->
+                 <!--{% set acces= json.loads(a.param_acces)  %}-->
+                 <!--&lt;!&ndash;{{acces}}&ndash;&gt;-->
+                 <!--{% for key in acces %}-->
+                 <!--&lt;!&ndash;{{key}}&ndash;&gt;-->
+                      <!--{% set m=db.session.query(Material).filter_by(material_id=(key|int)).first() %}-->
+                      <!--{{m.material_name}}:{{acces[key]}}&nbsp;&nbsp;-->
+                 <!--{% endfor %}-->
+             <!--</td>-->
 
+             <!--<th>设备名</th>-->
+             <!--<th>客户ID</th>-->
+             <!--<th>客户名</th>-->
+             <!--<th>MN号</th>-->
+             <!--<td>{% if entry.device_name != None %}-->
+                 <!--{{entry.device_name}}-->
+                 <!--{% endif %}-->
+             <!--</td>-->
+             <!--<td>{% if entry.client_id != None %}-->
+                 <!--{{entry.client_id}}-->
+                 <!--{% endif %}-->
+             <!--</td>-->
+             <!--<td>{% if entry.client_name != None %}-->
+                 <!--{{entry.client_name}}-->
+                 <!--{% endif %}-->
+             <!--</td>-->
 
+             <!--<td>{{entry.MN_id}}</td>-->
 
 
 

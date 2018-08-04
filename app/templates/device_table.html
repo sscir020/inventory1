@@ -1,52 +1,46 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-
+{% import "_macros.html" as macros %}
 
 {% block page_content %}
 <div>
     <h4>设备列表</h4>
     <form name="form_device" method="post">
-        {{form.MN_id}}
-        {{form.diff}}
-        {{form.oprtype}}
-        {{form.comment}}
+        设备ID{{form.device_id}}
+        操作{{form.oprtype}}
         {{form.submit}}
     </form>
-     <table  class="table table-hover" id="table_orange">
+    <table  class="table table-hover" id="table_orange">
          <thead>
              <th>设备ID</th>
-             <th>MN号</th>
-             <th>设备类型</th>
-             <th>设备名</th>
-             <th>库存数量</th>
-             <th>备货数量</th>
-             <th>售出数量</th>
-             <th>售后售出数量</th>
-             <th>配件组ID</th>
-             <th>配件组</th>
+             <th>名称</th>
+             <!--<th>设备类型</th>-->
+             <!--<th>设备名</th>-->
+             <!--<th>库存数量</th>-->
+             <!--<th>备货数量</th>-->
+             <!--<th>售出数量</th>-->
+             <!--<th>售后售出数量</th>-->
+             <!--<th>配件组ID</th>-->
+             <!--<th>配件组</th>-->
          </thead>
          {% for entry in devices %}
          <tr>
              <td>{{entry.device_id}}</td>
-             <td>{{entry.MN_id}}</td>
-             <td>{{entry.device_type}}</td>
-             <td>{{entry.device_name}}</td>
-             <td>{{entry.storenum}}</td>
-             <td>{{entry.preparenum}}</td>
-             <td>{{entry.salenum}}</td>
-             <td>{{entry.resalenum}}</td>
-             <td>{{entry.acces_id}}</td>
-             <td>
-                 {% set a=dbsession.query(Accessory).filter_by(acces_id=(entry.acces_id|int)).first() %}
-                 {% set acces= json.loads(a.param_acces)  %}
-                 <!--{{acces}}-->
-                 {% for key in acces %}
-                 <!--{{key}}-->
-                      {% set m=dbsession.query(Material).filter_by(material_id=(key|int)).first() %}
-                      {{m.material_name}}:{{acces[key]}}&nbsp;&nbsp;
-                 {% endfor %}
-             </td>
+             <td>{{entry.name_sn}}</td>
+             <!--<td>{{entry.device_type}}</td>-->
+             <!--<td>{{entry.device_name}}</td>-->
+             <!--<td>{{entry.storenum}}</td>-->
+             <!--<td>{{entry.preparenum}}</td>-->
+             <!--<td>{{entry.salenum}}</td>-->
+             <!--<td>{{entry.resalenum}}</td>-->
+             <!--<td>{{entry.acces_id}}</td>-->
          </tr>
-     </table>
+         {% endfor %}
+    </table>
 </div>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'ctr.form_change_device') }}
+</div>
+{% endif %}
 {% endblock %}

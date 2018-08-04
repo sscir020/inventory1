@@ -2,7 +2,7 @@
 
 {% block title %}Inveory{% endblock %}
 {% block head %}
-	<meta charset="utf-8">
+	<meta charset="utf8">
 	<title>奥斯恩-进销存系统</title>
 	{{ super() }}
 	<link rel="stylesheet" type="text/css" href="static/css/tablelook.css"  >
@@ -38,15 +38,15 @@
 					</ul>
 				</li>
                 <li><a href="#" class="divider">|</a></li>
-				<li><a href="{{url_for('ctr.show_material_table')}}"> 材料列表</a></li><!--,page=1-->
-				<li><a href="{{url_for('ctr.show_customerservice_table')}}"> 售后列表</a></li>
-				<li><a href="{{url_for('ctr.show_buy_materials')}}"> 购买列表</a></li>
-				<li><a href="{{url_for('ctr.show_rework_materials')}}"> 返修列表</a></li>
-				<li><a href="{{url_for('ctr.show_device_table')}}"> 设备列表</a></li>
+				<li><a href="{{url_for('ctr.form_change_material')}}"> 材料列表</a></li><!--,page=1-->
+				<li><a href="{{url_for('ctr.form_change_customerservice')}}"> 售后列表</a></li>
+				<li><a href="{{url_for('ctr.form_change_buy')}}"> 购买列表</a></li>
+				<li><a href="{{url_for('ctr.form_change_rework')}}"> 返修列表</a></li>
+				<li><a href="{{url_for('ctr.form_change_device')}}"> 设备列表</a></li>
 				<li><a href="{{url_for('ctr.add_material')}}">添加新材料</a></li>
 				<li><a href="{{url_for('ctr.show_join_oprs_main')}}">主要操作记录</a></li>
 				<li><a href="{{url_for('ctr.show_join_oprs')}}">全部操作记录</a></li>
-				<li><a href="{{url_for('ctr.form_search_MN')}}">搜索操作记录</a></li>
+				<li><a href="{{url_for('ctr.form_search_device')}}">搜索操作记录</a></li>
 				<!--<li><a href="{{url_for('ctr.show_users')}}">用户列表</a></li>-->
 			</ul>
 		</div>

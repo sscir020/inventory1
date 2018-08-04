@@ -6,10 +6,10 @@
 <div>
     <h4>售后列表</h4>
     <form name="form_customerservice" method="post" >
-        {{form.customerservice_id}}
-        {{form.diff}}
-        {{form.oprtype}}
-        {{form.comment}}
+        售后{{form.customerservice_id}}
+        数量{{form.diff}}
+        操作{{form.oprtype}}
+        备注{{form.comment}}
         {{form.submit}}
     </form>
      <table  class="table table-hover" id="table_orange">
@@ -18,7 +18,7 @@
              <th>材料ID</th>
              <th>设备ID</th>
              <th>MN号</th>
-             <th>初始数量</th>
+             <th>带回数量</th>
              <th>完好数量</th>
              <th>损坏数量</th>
              <th>返修数量</th>
@@ -28,6 +28,7 @@
              <th>售后售出数量</th>
              <th>售后售出费用</th>
              <th>已经售出</th>
+             <th>备注</th>
          </thead>
          {% for entry in customerservice %}
          <tr>
@@ -49,8 +50,13 @@
              <td>{{entry.scrapnum}}</td>
              <td>{{entry.inboundnum}}</td>
              <td>{{entry.resalenum}}</td>
+             {% if entry.fee>0 %}
+             <td style="color:red">{{entry.fee}}</td>
+             {% else %}
              <td>{{entry.fee}}</td>
+             {% endif %}
              <td>{{entry.isold}}</td>
+             <td>{{entry.comment}}</td>
          </tr>
          {% endfor %}
      </table>

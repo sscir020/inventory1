@@ -1,5 +1,6 @@
 create database testdb1;
 use testdb1;
+drop table if exists users;
 create table users(
 		user_id int not null auto_increment,
 		user_name varchar(64) not null,
@@ -32,6 +33,7 @@ create table materials(
         resalenum int not null default 0,
 		alarm_level int not null default 0,
 		acces_id int not null default 0,
+		comment int null default '',
 		primary key (material_id),
 		unique(material_name)
 		)default charset=utf8;
@@ -52,8 +54,8 @@ drop table if exists reworks;
 create table reworks(
         rework_id int not null auto_increment,
         material_id int,
+        device_id varchar(32) default '',
         service_id int,
-        MN_id varchar(32) not null default '',
 		batch varchar(32) not null,
         num int not null default 0,
         comment varchar(64) default '',

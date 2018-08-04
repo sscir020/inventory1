@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf8')
-
+from enum import Enum
 class Uri:
 	DEVELOPMENT_SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:hard_guess@localhost:3306/testdb1?charset=utf8&autocommit=true'
 	DEVELOPMENT_SQLALCHEMY_DATABASE_URI_1 = 'sqlite:///D:\\projects\\inventory2\\database\\data.sqlite'
@@ -12,64 +12,28 @@ class Uri:
 
 class Config:
     SECRET_KEY =  '1AR4bnTnLHZyHaKt' #os.environ.get('SECRET_KEY') or
-    # SQLALCHEMY_BINDS ={
-    #     'web_device': 'mysql+pymysql://root:Aosien2016@120.76.207.142:3306/inventory?charset=utf8&autocommit=true',
-    # }
-    # SQLALCHEMY_POOL_SIZE = 100
-    # SQLALCHEMY_MAX_OVERFLOW = 0
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:hard_guess@localhost:3306/testdb1?charset=utf8&autocommit=true'
+    SQLALCHEMY_BINDS ={
+        'web_device': 'mysql+pymysql://root:Aosien2016@120.76.207.142:3306/osen?charset=utf8&autocommit=true',
+    }
+    SQLALCHEMY_POOL_SIZE = 10
+    SQLALCHEMY_MAX_OVERFLOW = 0
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    FLASK_NUM_PER_PAGE = 5
-    FLASK_NUM_PER_PAGE_LIST = 6
+    FLASK_NUM_PER_PAGE = 15
+    # FLASK_NUM_PER_PAGE_LIST = 6
 #SESSION_TYPE= 'redis'
     SESSION_PERMANENT = True
     # SESSION_KEY_PREFIX='sessionp'
-    # ALARM_LEVEL=0
     MAX_CHAR_PER_COMMENT = 64
     DATABASE_URI=Uri.DEVELOPMENT_SQLALCHEMY_DATABASE_URI
+
 
     @staticmethod
     def init_app(app):
         pass
 
 
-class DevelopmentConfig(Config):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:hard_guess@localhost:3306/testdb1?charset=utf88&autocommit=true'
-
-class Development2Config(Config):
-    # basedir = os.path.abspath(os.path.dirname(__file__))
-    # string= os.path.join(basedir,'projects\inventory2\database\data.sqlite')
-    # print("path:"+string)
-    # DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///D:\\projects\\inventory2\\database\\data.sqlite'
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///'+string
-
-class TestingConfig(Config):
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:Aosien2016@120.76.207.142:3306/inventory?charset=utf88&autocommit=true'
-
-
-class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:Aosien2016@120.76.207.142:3306/inventory?charset=utf88&autocommit=true'
-
-
-config = {
-    'development': DevelopmentConfig,
-    'development2': Development2Config,
-    'testing': TestingConfig,
-    'production': ProductionConfig,
-
-    'default': DevelopmentConfig
-}
-
-from enum import Enum
-class CommentType(Enum):
-    BUY=1
-    REWORK=2
-    DEVICE=3
-    CLIENT =4
-    CUSTOMERSERVICE=5
 
 
 class Oprenum(Enum):
@@ -99,13 +63,14 @@ class Oprenum(Enum):
     RINBOUND =24
     CSFEE=25
     CSFEEZERO=26
+    COMMENT=32
 oprenumCH ={
     Oprenum.INITADD.name: '新添加材料',#
     Oprenum.INBOUND.name: '入库',
     Oprenum.OUTBOUND.name: '出库',
     Oprenum.RESTORE.name: '修好',
-    Oprenum.REWORK.name: '返修中',
-    Oprenum.BUY.name:"购买中",#
+    Oprenum.REWORK.name: '返修',
+    Oprenum.BUY.name:"购买",#
     Oprenum.CANCELBUY.name:'取消购买',
     Oprenum.SCRAP.name:'报废',
     Oprenum.RECYCLE.name:'售后带回',
@@ -125,7 +90,8 @@ oprenumCH ={
     Oprenum.CSRESALE.name:'设备售后售出',
     Oprenum.RINBOUND.name:'修好入库',
     Oprenum.CSFEE.name:'增加售后售出费用',
-    Oprenum.CSFEEZERO.name:'费用清零',
+    Oprenum.CSFEEZERO.name:'欠费清零',
+    Oprenum.COMMENT.name:'备注',
 }
 oprenumNum = {
     '新添加材料':Oprenum.INITADD,#
@@ -153,8 +119,17 @@ oprenumNum = {
     '设备售后售出':Oprenum.CSRESALE,
     '修好入库':Oprenum.RINBOUND,
     '增加售后售出费用':Oprenum.CSFEE,
-    '费用清零':Oprenum.CSFEEZERO,
+    '欠费清零':Oprenum.CSFEEZERO,
+    '备注':Oprenum.COMMENT,
 }
+
+class CommentType(Enum):
+    BUY=1
+    REWORK=2
+    DEVICE=3
+    CLIENT =4
+    CUSTOMERSERVICE=5
+
 class Sensorname(Enum):
     P25 = 1
     P10 = 2
@@ -185,13 +160,6 @@ class Sensorname(Enum):
     ULTRAVIOLETRAYS = 27
 
 
-class Param(Enum):
-    PARAM_8 = 8
-    PARAM_7 = 7
-    PARAM_5 = 5
-    PARAM_3 = 3
-    PARAM_0 = 0
-
 class Prt():
     def prt(start='',arg1='',arg2='',arg3='',arg4='',arg5='',arg6='',arg7='',arg8='',arg9='',arg10=''):
         print("*********************************************************************")
@@ -200,11 +168,3 @@ class Prt():
 
 
 
-
-# oprenum = {
-#     Oprenum.INITADD:'INITADD',
-#     Oprenum.INBOUND:'INBOUND',
-#     Oprenum.OUTBOUND:'OUTBOUND',
-#     Oprenum.REWORK:'REWORK',
-#     Oprenum.RESTORE:'RESTORE'
-# }

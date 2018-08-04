@@ -1,7 +1,8 @@
+
 from .__init__ import db
 from flask import flash
 from main_config import Oprenum
-import json,DateTime,time
+import json,datetime,time
 # from db.DateTime import db.DateTime
 # from flask_login import UserMixin, AnonymousUserMixin
 
@@ -47,6 +48,7 @@ class Material(db.Model):
     resalenum=db.Column(db.Integer,nullable=False,default=0)
     alarm_level=db.Column(db.Integer,nullable=False,default=0)
     acces_id=db.Column(db.Integer, db.ForeignKey('accessories.acces_id'))
+    comment = db.Column(db.String(64), nullable=True, default='')
     oprs = db.relationship('Opr', backref='materials', lazy='dynamic')
     buybatches = db.relationship('Buy', backref='materials', lazy='dynamic')
     reworkbatches = db.relationship('Rework', backref='materials', lazy='dynamic')
@@ -68,7 +70,7 @@ class Rework(db.Model):
     rework_id=db.Column(db.Integer,nullable=False,primary_key=True)
     material_id = db.Column(db.Integer,db.ForeignKey('materials.material_id'))
     service_id = db.Column(db.Integer,db.ForeignKey('customerservice.service_id'))
-    MN_id = db.Column(db.String(32), nullable=True, default='')
+    device_id = db.Column(db.String(16), nullable=True, default='')
     batch=db.Column(db.String(32),nullable=False,unique=True,index=True,default='')
     num=db.Column(db.Integer,nullable=False,default=0)
     comment=db.Column(db.String(64),nullable=True,default='')
@@ -80,53 +82,42 @@ class Opr(db.Model):
     diff = db.Column(db.Integer, nullable=False)
     MN_id = db.Column(db.String(32), nullable=True,default='')
     material_id = db.Column(db.Integer, db.ForeignKey('materials.material_id'))
-    device_id = db.Column(db.Integer, db.ForeignKey('devices.device_id'))
+    device_id = db.Column(db.String(16))
     client_id = db.Column(db.Integer, db.ForeignKey('clients.client_id'))
     service_id = db.Column(db.Integer,db.ForeignKey('customerservice.service_id'))
     oprtype = db.Column(db.String(32), nullable=False)
     oprbatch = db.Column(db.String(32), nullable=False,default='')
     isgroup =db.Column(db.Boolean,nullable=False,default=0)
     comment = db.Column(db.String(64), nullable=True, default='')
-    momentary = db.Column(db.DateTime, index=True,default=db.DateTime.now())#.strftime("%Y-%m-%d %H:%M:%S")
+    momentary = db.Column(db.DateTime, index=True,default=datetime.datetime.now())#.strftime("%Y-%m-%d %H:%M:%S")
 
     def prt(self):
         print(self.opr_id, self.user_id, self.diff, self.material_id)
 
-class Accessory(db.Model):
-    __tablename__='accessories'
-    acces_id = db.Column(db.Integer, nullable=False, primary_key=True)
-    param_num = db.Column(db.Integer, nullable=False)
-    param_acces = db.Column(db.String(2048), nullable=False)
-    devices = db.relationship('Device', backref='accessories', lazy='dynamic')
 
-class Device(db.Model):
-    __tablename__='devices'
-    device_id = db.Column(db.Integer, nullable=False, primary_key=True)
-    MN_id = db.Column(db.String(32), nullable=False,default='')
-    device_type = db.Column(db.String(32), nullable=False,default='')
-    device_name = db.Column(db.String(32), nullable=False, default='')
-    storenum = db.Column(db.Integer, nullable=False,default=0)
-    preparenum = db.Column(db.Integer, nullable=False,default=0)
-    salenum = db.Column(db.Integer, nullable=False,default=0)
-    resalenum = db.Column(db.Integer, nullable=False,default=0)
-    acces_id = db.Column(db.Integer, db.ForeignKey('accessories.acces_id'), nullable=False)
-    comment = db.Column(db.String(64), nullable=True,default='')
-    oprs = db.relationship('Opr', backref='devices', lazy='dynamic')
+#
+# class Device(db.Model):
+#     __tablename__='devices'
+#     device_id = db.Column(db.Integer, nullable=False, primary_key=True)
+#     MN_id = db.Column(db.String(32), nullable=False,default='')
+#     device_type = db.Column(db.String(32), nullable=False,default='')
+#     device_name = db.Column(db.String(32), nullable=False, default='')
+#     storenum = db.Column(db.Integer, nullable=False,default=0)
+#     preparenum = db.Column(db.Integer, nullable=False,default=0)
+#     salenum = db.Column(db.Integer, nullable=False,default=0)
+#     resalenum = db.Column(db.Integer, nullable=False,default=0)
+#     acces_id = db.Column(db.Integer, db.ForeignKey('accessories.acces_id'), nullable=False)
+#     comment = db.Column(db.String(64), nullable=True,default='')
+#     oprs = db.relationship('Opr', backref='devices', lazy='dynamic')
 
-class Client(db.Model):
-    __tablename__='clients'
-    client_id = db.Column(db.Integer, nullable=False, primary_key=True)
-    client_name = db.Column(db.String(32), nullable=False)
-    MN_id = db.Column(db.String(32),nullable=False,default='')
-    credit=db.Column(db.Integer,nullable=True,default=0)
-    comment = db.Column(db.String(64), nullable=True,default='')
+
 
 class Customerservice(db.Model):
     __tablename__='customerservice'
     service_id= db.Column(db.Integer, nullable=False, primary_key=True)
     MN_id=db.Column(db.String(32), nullable=False,default='')
     material_id=db.Column(db.Integer,db.ForeignKey('materials.material_id'))
-    device_id=db.Column(db.Integer,db.ForeignKey('devices.device_id'))
+    device_id=db.Column(db.String(16))
     originnum= db.Column(db.Integer, nullable=True,default=0)
     goodnum= db.Column(db.Integer, nullable=True,default=0)
     brokennum= db.Column(db.Integer, nullable=True,default=0)
@@ -139,6 +130,41 @@ class Customerservice(db.Model):
     comment= db.Column(db.String(64), nullable=True,default='')
     isold =db.Column(db.Boolean,nullable=False,default=0)
 
+class Accessory(db.Model):
+    __tablename__='accessories'
+    acces_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    param_num = db.Column(db.Integer, nullable=False)
+    param_acces = db.Column(db.String(2048), nullable=False)
+    # devices = db.relationship('web_device', backref='accessories', lazy='dynamic')
+
+class Web_device(db.Model):
+    __bind_key__='web_device'
+    device_id = db.Column(db.String(16),nullable = False, primary_key=True,index=True)
+    name_sn = db.Column(db.String(20),nullable = True, default = 'null')
+    name_ln = db.Column(db.String(50),nullable = True, default = 'null')
+    description = db.Column(db.String(255),nullable = True, default = 'null')
+    type = db.Column(db.String(20),nullable = True, default = 'null')
+    create_dtm = db.Column(db.DateTime,nullable = True, default = 'null')
+    active_ind = db.Column(db.Boolean,nullable = True, default = 'null')
+    lng = db.Column(db.String(10),nullable = True, default='113.837111')
+    lat = db.Column(db.String(10),nullable = True, default='22.6046912')
+    online_ind = db.Column(db.Boolean,nullable = True, default = 0)
+    address = db.Column(db.String(255),nullable = True, default = 'null')
+    update_dtm = db.Column(db.DateTime,nullable = True, default = 'null')
+    creator = db.Column(db.Integer,nullable = True, default = 'null')
+    contractor = db.Column(db.String(255),nullable = True, default='')
+    install_dt = db.Column(db.DateTime,nullable = True, default = 'null')
+    video = db.Column(db.String(255),nullable = True, default = 'null')
+
+
+
+class Client(db.Model):
+    __tablename__='clients'
+    client_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    client_name = db.Column(db.String(32), nullable=False)
+    MN_id = db.Column(db.String(32),nullable=False,default='')
+    credit=db.Column(db.Integer,nullable=True,default=0)
+    comment = db.Column(db.String(64), nullable=True,default='')
 
 # class AnonymousUser(AnonymousUserMixin):
 #     def can(self, permissions):

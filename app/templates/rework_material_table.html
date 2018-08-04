@@ -3,23 +3,24 @@
 
 {% block page_content %}
 <div>
+     <h4>返修列表</h4>
     <form name="form_rework" method="post">
-        {{form.rework_id}}
-        {{form.diff}}
-        {{form.oprtype}}
-        {{form.comment}}
+        售后ID{{form.rework_id}}
+        数量{{form.diff}}
+        操作{{form.oprtype}}
+        备注{{form.comment}}
         {{form.submit}}
     </form>
-     <h4>返修列表</h4>
      <table class="table table-hover" id="table_orange"><!--table-condensed-->
          <thead>
              <th>返修ID</th>
              <th>库存ID</th>
              <th>库存名称</th>
+             <th>设备ID</th>
              <th>售后ID</th>
-             <th>MN号</th>
              <th>返修批次</th>
              <th>返修数量</th>
+             <th>备注</th>
          </thead>
          {% for entry in reworkbatches %}
          <tr>
@@ -29,21 +30,23 @@
                  {% endif %}
              </td>
              <td>{{entry.material_name}}</td>
+             <td>
+                  {% if entry.device_id != '0' %}
+                  {{entry.device_id}}
+                  {% endif %}
+             </td>
              <td>{% if entry.service_id != None %}
                  {{entry.service_id}}
                  {% endif %}
              </td>
-             <td>
-                  {% if entry.MN_id != '0' %}
-                  {{entry.MN_id}}
-                  {% endif %}
-             </td>
              <td>{{entry.batch}}</td>
              <td>{{entry.num}}</td>
+             <td>{{entry.comment}}</td>
          </tr>
          {% endfor %}
      </table>
 </div>
+
 {% endblock %}
 
 

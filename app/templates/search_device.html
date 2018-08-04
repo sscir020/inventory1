@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
 
 {% block page_content %}
 {{ wtf.quick_form(form) }}
@@ -11,11 +13,7 @@
              <th>库存ID</th>
              <th>库存名</th>
              <th>设备ID</th>
-             <th>设备名</th>
-             <th>客户ID</th>
-             <th>客户名</th>
              <th>操作类型</th>
-             <th>MN号</th>
              <th>数量</th>
              <th>批次</th>
              <th>主件</th>
@@ -39,20 +37,7 @@
                      {{entry.device_id}}
                      {% endif %}
                  </td>
-                 <td>{% if entry.device_name != None %}
-                     {{entry.device_name}}
-                     {% endif %}
-                 </td>
-                 <td>{% if entry.client_id != None %}
-                     {{entry.client_id}}
-                     {% endif %}
-                 </td>
-                 <td>{% if entry.client_name != None %}
-                     {{entry.client_name}}
-                     {% endif %}
-                 </td>
                  <td>{{oprenumCH[entry.oprtype]}}</td>
-                 <td>{{entry.MN_id}}</td>
                  <td>{{entry.diff}}</td>
                  <td>{{entry.oprbatch}}</td>
                  <td>{{entry.isgroup}}</td>
@@ -64,5 +49,11 @@
         {% endif %}
     </table>
 </div>
+
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'ctr.form_search_device') }}
+</div>
+{% endif %}
 {% endblock %}
 

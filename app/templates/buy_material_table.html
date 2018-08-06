@@ -33,6 +33,11 @@
          {% endfor %}
      </table>
 </div>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'ctr.form_change_buy') }}
+</div>
+{% endif %}
 {% endblock %}
 
 

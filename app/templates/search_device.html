@@ -13,6 +13,7 @@
              <th>库存ID</th>
              <th>库存名</th>
              <th>设备ID</th>
+             <th>售后ID</th>
              <th>操作类型</th>
              <th>数量</th>
              <th>批次</th>
@@ -35,6 +36,10 @@
                  </td>
                  <td>{% if entry.device_id != None %}
                      {{entry.device_id}}
+                     {% endif %}
+                 </td>
+                 <td>{% if entry.service_id != None %}
+                     {{entry.service_id}}
                      {% endif %}
                  </td>
                  <td>{{oprenumCH[entry.oprtype]}}</td>

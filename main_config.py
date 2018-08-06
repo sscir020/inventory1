@@ -48,21 +48,22 @@ class Oprenum(Enum):
     RECYCLE=9
     RESALE=10
     PREPARE=11
-    DINITADD=12
-    DPREPARE=13
-    DOUTBOUND=14
-    DRECYCLE=15
-    CINITADD=16
+    # DINITADD=12
+    # DPREPARE=13
+    # DOUTBOUND=14
+    CSDRECYCLE=15
+    # CINITADD=16
     CSGINBOUND=17
-    CSRINBOUND=18
+    # CSRINBOUND=18
     CSREWORK=19
     CSRESTORE=20
     CSSCRAP=21
     CSBROKEN=22
-    CSRESALE =23
-    RINBOUND =24
+    CSDRESALE =23
+    # RINBOUND =24
     CSFEE=25
     CSFEEZERO=26
+    CSDRESTORE = 27
     COMMENT=32
 oprenumCH ={
     Oprenum.INITADD.name: '新添加材料',#
@@ -73,24 +74,25 @@ oprenumCH ={
     Oprenum.BUY.name:"购买",#
     Oprenum.CANCELBUY.name:'取消购买',
     Oprenum.SCRAP.name:'报废',
-    Oprenum.RECYCLE.name:'售后带回',
-    Oprenum.RESALE.name:'售后售出',
+    Oprenum.RECYCLE.name:'材料售后带回',
+    Oprenum.RESALE.name:'材料售后售出',
     Oprenum.PREPARE.name:'备货',#
-    Oprenum.DINITADD.name:'新添加设备',
-    Oprenum.DPREPARE.name:'设备备货',
-    Oprenum.DOUTBOUND.name:'设备出库',
-    Oprenum.DRECYCLE.name:'设备售后带回',
-    Oprenum.CINITADD.name:'新添加客户',#
+    # Oprenum.DINITADD.name:'新添加设备',
+    # Oprenum.DPREPARE.name:'设备备货',
+    # Oprenum.DOUTBOUND.name:'设备出库',
+    Oprenum.CSDRECYCLE.name:'设备售后带回',
+    # Oprenum.CINITADD.name:'新添加客户',#
     Oprenum.CSGINBOUND.name:'材料售后完好入库',
-    Oprenum.CSRINBOUND.name:'材料售后修好入库',
-    Oprenum.CSREWORK.name:'售后返修',
-    Oprenum.CSRESTORE.name:'售后修好',
-    Oprenum.CSSCRAP.name:'售后报废',#
-    Oprenum.CSBROKEN.name:'售后损坏',
-    Oprenum.CSRESALE.name:'设备售后售出',
-    Oprenum.RINBOUND.name:'修好入库',
+    # Oprenum.CSRINBOUND.name:'材料售后修好入库',
+    Oprenum.CSREWORK.name:'材料售后返修',
+    Oprenum.CSRESTORE.name:'材料售后修好',
+    Oprenum.CSSCRAP.name:'材料售后报废',#
+    Oprenum.CSBROKEN.name:'材料售后损坏',
+    Oprenum.CSDRESALE.name:'设备售后售出',
+    # Oprenum.RINBOUND.name:'材料修好入库',
     Oprenum.CSFEE.name:'增加售后售出费用',
     Oprenum.CSFEEZERO.name:'欠费清零',
+    Oprenum.CSDRESTORE.name:'设备售后修好',
     Oprenum.COMMENT.name:'备注',
 }
 oprenumNum = {
@@ -102,24 +104,25 @@ oprenumNum = {
     '购买':Oprenum.BUY,#
     '取消购买':Oprenum.CANCELBUY,
     '报废':Oprenum.SCRAP,
-    '售后带回':Oprenum.RECYCLE,
-    '售后带出':Oprenum.RESALE,
+    '材料售后带回':Oprenum.RECYCLE,
+    '材料售后带出':Oprenum.RESALE,
     '备货':Oprenum.PREPARE,#
-    '新添加设备':Oprenum.DINITADD,
-    '设备备货':Oprenum.DPREPARE,
-    '设备出库':Oprenum.DOUTBOUND,
-    '设备售后带回':Oprenum.DRECYCLE,
-    '新添加客户':Oprenum.CINITADD,
+    # '新添加设备':Oprenum.DINITADD,
+    # '设备备货':Oprenum.DPREPARE,
+    # '设备出库':Oprenum.DOUTBOUND,
+    '设备售后带回':Oprenum.CSDRECYCLE,
+    # '新添加客户':Oprenum.CINITADD,
     '材料售后完好入库':Oprenum.CSGINBOUND,#
-    '材料售后修好入库':Oprenum.CSRINBOUND,#
-    '售后返修':Oprenum.CSREWORK,
-    '售后修好': Oprenum.CSRESTORE,
-    '售后报废':Oprenum.CSSCRAP,
-    '售后损坏':Oprenum.CSBROKEN,
-    '设备售后售出':Oprenum.CSRESALE,
-    '修好入库':Oprenum.RINBOUND,
+    # '材料售后修好入库':Oprenum.CSRINBOUND,#
+    '材料售后返修':Oprenum.CSREWORK,
+    '材料售后修好': Oprenum.CSRESTORE,
+    '材料售后报废':Oprenum.CSSCRAP,
+    '材料售后损坏':Oprenum.CSBROKEN,
+    '设备售后售出':Oprenum.CSDRESALE,
+    # '材料修好入库':Oprenum.RINBOUND,
     '增加售后售出费用':Oprenum.CSFEE,
     '欠费清零':Oprenum.CSFEEZERO,
+    '设备售后修好':Oprenum.CSDRESTORE.name,
     '备注':Oprenum.COMMENT,
 }
 

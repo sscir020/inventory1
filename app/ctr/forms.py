@@ -29,7 +29,8 @@ class SearchDeviceForm(FlaskForm):
 class ChangeMaterialForm(Form):#7
     material_id=IntegerField("材料id",validators=[DataRequired()])
     diff=IntegerField("数量",validators=[DataRequired(),NumberRange(min=1)])
-    oprtype = SelectField("提交", choices=[(Oprenum.BUY.name, '购买'), (Oprenum.REWORK.name, '返修'),(Oprenum.PREPARE.name, "备货"), (Oprenum.OUTBOUND.name, "出库"), (Oprenum.RECYCLE.name, "售后带回"), (Oprenum.CSRESALE.name, "售后带出"),(Oprenum.COMMENT.name,'修改备注')])
+    oprtype = SelectField("提交", choices=[(Oprenum.BUY.name, '购买'), (Oprenum.REWORK.name, '返修'),(Oprenum.PREPARE.name, "备货"), (Oprenum.OUTBOUND.name, "出库"),
+                                         (Oprenum.RECYCLE.name, "材料售后带回"), (Oprenum.RESALE.name, "材料售后带出"),(Oprenum.COMMENT.name,'修改备注')])
     device_id=StringField("设备号")
     comment=StringField("备注")
     submit=SubmitField("提交")
@@ -37,7 +38,9 @@ class ChangeMaterialForm(Form):#7
 class CustomerserviceForm(Form):#5
     customerservice_id=IntegerField("售后id",validators=[DataRequired()])
     diff=IntegerField("数量",validators=[DataRequired(),NumberRange(min=1)])
-    oprtype=SelectField("提交",choices=[(Oprenum.CSBROKEN.name,'售后损坏'),(Oprenum.CSREWORK.name,'售后返修'),(Oprenum.CSGINBOUND.name,"材料售后完好入库"),(Oprenum.CSFEE.name,"增加售后售出费用"),(Oprenum.CSFEEZERO.name,"费用清零"),(Oprenum.COMMENT.name,'修改备注')])
+    oprtype=SelectField("提交",choices=[(Oprenum.CSBROKEN.name,'材料售后损坏'),(Oprenum.CSREWORK.name,'材料售后返修'),(Oprenum.CSGINBOUND.name,"材料售后完好入库"),
+                                         (Oprenum.CSDRESTORE.name,"设备售后修好"),(Oprenum.CSDRESALE.name,"设备售后售出"),
+                                         (Oprenum.CSFEE.name,"增加售后售出费用"),(Oprenum.CSFEEZERO.name,"欠费清零"),(Oprenum.COMMENT.name,'修改备注')])
     comment=StringField("备注")
     submit=SubmitField("提交")
 
@@ -51,14 +54,14 @@ class BuyMaterialForm(Form):#2
 class ReworkForm(Form):#4
     rework_id=IntegerField("返修id",validators=[DataRequired()])
     diff=IntegerField("数量",validators=[DataRequired(),NumberRange(min=1)])
-    oprtype=SelectField("提交",choices=[(Oprenum.CSRESTORE.name,'售后修好'),(Oprenum.CSSCRAP.name,'售后报废'),(Oprenum.RESTORE.name,'修好'),(Oprenum.SCRAP.name,'报废'),(Oprenum.COMMENT.name,'修改备注')])
+    oprtype=SelectField("提交",choices=[(Oprenum.RESTORE.name,'修好'),(Oprenum.SCRAP.name,'报废'),(Oprenum.CSRESTORE.name,'材料售后修好'),(Oprenum.CSSCRAP.name,'材料售后报废'),(Oprenum.COMMENT.name,'修改备注')])
     comment=StringField("备注")
     submit=SubmitField("提交")
 
 class DeviceForm(Form):#1
     device_id=StringField("设备号",validators=[DataRequired()])
     # diff=IntegerField("数量",validators=[DataRequired(),NumberRange(min=1)])
-    oprtype = SelectField("提交", choices=[(Oprenum.DRECYCLE.name, '设备售后带回')])
+    oprtype = SelectField("提交", choices=[(Oprenum.CSDRECYCLE.name, '设备售后带回')])
     comment = StringField("备注")
     submit=SubmitField("提交")
 

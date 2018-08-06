@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 
 {% block page_content %}
 <div>
     <h4>售后列表</h4>
     <form name="form_customerservice" method="post" >
-        售后{{form.customerservice_id}}
+        售后ID{{form.customerservice_id}}
         数量{{form.diff}}
         操作{{form.oprtype}}
         备注{{form.comment}}
@@ -20,11 +21,11 @@
              <th>MN号</th>
              <th>带回数量</th>
              <th>完好数量</th>
+             <th>完好入库数量</th>
              <th>损坏数量</th>
              <th>返修数量</th>
-             <th>修好数量</th>
+             <th>修好入库数量</th>
              <th>报废数量</th>
-             <th>入库数量</th>
              <th>售后售出数量</th>
              <th>售后售出费用</th>
              <th>已经售出</th>
@@ -44,11 +45,11 @@
              <td>{{entry.MN_id}}</td>
              <td>{{entry.originnum}}</td>
              <td>{{entry.goodnum}}</td>
+             <td>{{entry.inboundnum}}</td>
              <td>{{entry.brokennum}}</td>
              <td>{{entry.reworknum}}</td>
              <td>{{entry.restorenum}}</td>
              <td>{{entry.scrapnum}}</td>
-             <td>{{entry.inboundnum}}</td>
              <td>{{entry.resalenum}}</td>
              {% if entry.fee>0 %}
              <td style="color:red">{{entry.fee}}</td>
@@ -60,6 +61,10 @@
          </tr>
          {% endfor %}
      </table>
-
 </div>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'ctr.form_change_customerservice') }}
+</div>
+{% endif %}
 {% endblock %}

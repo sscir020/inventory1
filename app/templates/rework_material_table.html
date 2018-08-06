@@ -5,7 +5,7 @@
 <div>
      <h4>返修列表</h4>
     <form name="form_rework" method="post">
-        售后ID{{form.rework_id}}
+        返修ID{{form.rework_id}}
         数量{{form.diff}}
         操作{{form.oprtype}}
         备注{{form.comment}}
@@ -29,7 +29,9 @@
                  {{entry.material_id}}
                  {% endif %}
              </td>
-             <td>{{entry.material_name}}</td>
+             <td>{% if entry.material_name != None %}
+                  {{entry.material_name}}
+                  {% endif %}</td>
              <td>
                   {% if entry.device_id != '0' %}
                   {{entry.device_id}}
@@ -46,7 +48,11 @@
          {% endfor %}
      </table>
 </div>
-
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'ctr.form_change_rework') }}
+</div>
+{% endif %}
 {% endblock %}
 
 

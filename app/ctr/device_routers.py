@@ -6,7 +6,7 @@ from ..decorators import loggedin_required
 from ..__init__ import db
 from .forms import LoginForm,RegistrationForm,AddMaterialForm,DeviceForm
 from . import ctr
-from .material_routers import material_isvalid_num,material_change_num,change_materials_oprs_db
+
 import json,datetime
 
 
@@ -26,22 +26,29 @@ def form_change_device():
         if device == None:
             flash("设备不存在")
         else:
-            if oprtype==Oprenum.DRECYCLE.name:#24
-                cs = db.session.query(Customerservice).filter( Customerservice.device_id == device_id).first()  # filter(Customerservice.MN_id == d.MN_id)
-                if cs==None:
-                    cs = Customerservice(MN_id=device_id, device_id=device_id,diff=diff,comment=comment)
+            if oprtype==Oprenum.CSDRECYCLE.name:#24
+                services = db.session.query(Customerservice).filter( Customerservice.device_id == device_id).filter(Customerservice.isold==False).all()  # filter(Customerservice.MN_id == d.MN_id)
+                isexisted=False
+                for cs in services:
+                    if cs.material_id==None:
+                        isexisted=True
+                        break
+                if isexisted==False:
+                    cs = Customerservice(MN_id=device_id, device_id=device_id,originnum=diff,brokennum=diff,comment=comment)
                     db.session.add_all([cs])
                     db.session.flush()
                     # Prt.prt(c.originnum,diff)
-                cs.originnum+=diff
-                o = Opr(device_id=device_id, MN_id=device_id,diff=diff, user_id=session['userid'], oprtype=Oprenum.DRECYCLE.name,
-                        isgroup=True, oprbatch='', comment=comment, \
-                        momentary=datetime.datetime.now())
-                db.session.add_all([cs,o])
-                db.session.commit()
-                db.session.flush()
-                db.session.close()
-                flash("设备到售后列表更新成功")
+                    # cs.originnum+=diff
+                    o = Opr(device_id=device_id, MN_id=device_id,diff=diff,service_id=cs.service_id, user_id=session['userid'], oprtype=Oprenum.CSDRECYCLE.name,
+                            isgroup=True, oprbatch='', comment=comment, \
+                            momentary=datetime.datetime.now())
+                    db.session.add_all([cs,o])
+                    db.session.commit()
+                    db.session.flush()
+                    db.session.close()
+                    flash("设备到售后列表更新成功")
+                else:
+                    flash("设备已存在")
             else:
                 flash("操作类型错误")
     page = request.args.get('page', 1, type=int)

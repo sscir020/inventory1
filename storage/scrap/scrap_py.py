@@ -484,24 +484,107 @@ from flask_wtf import Form
 #
 #     'default': DevelopmentConfig
 # }
+#
+# elif oprtype == Oprenum.CSRINBOUND.name:
+# cs.restorenum -= diff
+# cs.inboundnum += diff
+# m.storenum += diff
+# db.session.add_all([m])
+
+# elif oprtype == Oprenum.DINITADD.name:
+# pass
+# elif oprtype == Oprenum.DOUTBOUND.name:
+# pass
+# elif oprtype == Oprenum.CINITADD.name:
+# pass
+#
+# elif opr.oprtype == Oprenum.DOUTBOUND.name:
+# d = db.session.query(Device).filter_by(device_id=opr.device_id).first()
+# if d != None:
+#     if opr.diff > d.storenum:
+#         flash("回滚失败_主件_数量超标" + str(opr.diff) + ">" + str(d.storenum))
+#         return redirect(url_for('ctr.show_join_oprs_main'))
+#     else:
+#         d.storenum -= opr.diff
+#         db.session.add(d)
+#         db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
+#         db.session.commit()
+#         db.session.flush()
+#         flash("回滚成功_主件")
+# else:
+#
+#     flash("回滚失败-材料不存在_main" + str(opr.device_id))
+
+
+
+# elif oprtype == Oprenum.DINITADD.name:
+#     pass
+# elif oprtype == Oprenum.DOUTBOUND.name:
+#     m.preparenum+=diff
+#     db.session.add_all([m])
+# elif oprtype == Oprenum.CINITADD.name:
+#     pass
+# elif oprtype == Oprenum.RINBOUND.name:#17
+#     if diff > m.restorenum:
+#         flash("修好入库数量大于修好数量")
+
+# elif oprtype == Oprenum.DINITADD.name:  # 15
+# pass
+# elif oprtype == Oprenum.DOUTBOUND.name:  # 16
+# if diff > m.preparenum:
+#     flash("设备出库数量大于备货数量" + str(diff) + ">" + str(m.preparenum))
+#     return False
+# elif oprtype == Oprenum.CSRESTORE.name:
+#     pass
+# elif oprtype == Oprenum.CSSCRAP.name:
+# pass
+# elif oprtype == Oprenum.CSGINBOUND.name:
+# pass
+# elif oprtype == Oprenum.CSRINBOUND.name:
+# pass
+
+# elif oprtype == Oprenum.DINITADD.name:
+# # m.storenum += diff
+# pass
+# elif oprtype == Oprenum.DOUTBOUND.name:
+# m.preparenum -= diff
+# m.salenum += diff
+# # elif oprtype == Oprenum.RINBOUND.name:
+# #     # m.restorenum-=diff
+# #     # m.storenum+=diff
+# #     pass
+# elif oprtype == Oprenum.CSRESTORE.name:
+# pass
+# elif oprtype == Oprenum.CSSCRAP.name:
+# pass
+# elif oprtype == Oprenum.CSGINBOUND.name:
+# pass
+# elif oprtype == Oprenum.CSRINBOUND.name:
+# pass
 
 
 
 
+# elif oprtype == Oprenum.CSGINBOUND.name:
+#     cs=db.session(Customerservice).filter(Customerservice.MN_id==MN_id).filer(Customerservice.material_id==material_id).first()
+#     cs.goodnum -= diff
+#     cs.inboundnum += diff
+#     m.storenum += diff
+#     db.session.add_all([m, cs])
+# elif oprtype == Oprenum.CSRINBOUND.name:
+#     cs.restorenum -= diff
+#     cs.inboundnum += diff
+#     m.storenum += diff
+#     db.session.add_all([m, cs])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+# elif oprtype == Oprenum.DRECYCLE.name:
+#     b=db.session.query(Rework).filter(Rework.batch == batch).first()
+#     if b==None:
+#         flash("售后带回批次不存在")
+#         return False
+#     if diff!=b.num:
+#         flash("售后带回数量不等于返修批次数量")
+#         return False
 
 
 

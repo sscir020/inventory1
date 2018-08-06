@@ -12,6 +12,7 @@
              <th>库存ID</th>
              <th>库存名</th>
              <th>设备ID</th>
+             <th>售后ID</th>
              <th>操作类型</th>
              <th>数量</th>
              <th>批次</th>
@@ -35,6 +36,10 @@
                  {{entry.device_id}}
                  {% endif %}
              </td>
+             <td>{% if entry.service_id != None %}
+                 {{entry.service_id}}
+                 {% endif %}
+             </td>
              <td>{{oprenumCH[entry.oprtype]}}</td>
              <td>{{entry.diff}}</td>
              <td>{{entry.oprbatch}}</td>
@@ -46,6 +51,10 @@
          {% endfor %}
     </table>
 </div>
-
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'ctr.show_join_oprs') }}
+</div>
+{% endif %}
 
 {% endblock %}

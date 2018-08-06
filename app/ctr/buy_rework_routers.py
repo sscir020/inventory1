@@ -62,7 +62,7 @@ def form_change_buy():
         outerjoin(Material,Material.material_id==Buy.material_id).order_by(Buy.batch.desc()).paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
     buybatches=pagination.items
     db.session.close()
-    return render_template('buy_material_table.html',form=form,buybatches=buybatches)
+    return render_template('buy_material_table.html',form=form,buybatches=buybatches,pagination=pagination )
 
 
 def customerservice_isvalid_num(cs,m,diff,oprtype,batch,device_id):
@@ -86,9 +86,9 @@ def customerservice_isvalid_num(cs,m,diff,oprtype,batch,device_id):
         if diff > cs.goodnum:
             flash("入库数量大于售后完好数量" + str(diff) + ">" + str(cs.goodnum))
             return False
-        if cs.inboundnum + diff > cs.goodnum + cs.restorenum:
-            flash("入库数量大于售后带回数量" + str(diff) + str(cs.inboundnum) + ">" + str(cs.goodnum) + str(cs.restorenum))
-            return False
+        # if cs.inboundnum + diff > cs.goodnum + cs.restorenum:
+        #     flash("入库数量大于售后带回数量" + str(diff) + str(cs.inboundnum) + ">" + str(cs.goodnum) + str(cs.restorenum))
+        #     return False
     else:
         flash("操作类型错误_判断"+str(oprtype))
         return False
@@ -117,11 +117,6 @@ def customerservice_change_num(cs,m,diff, oprtype, batch,device_id):
             db.session.add_all([b])
     elif oprtype == Oprenum.CSGINBOUND.name:
         cs.goodnum -= diff
-        cs.inboundnum += diff
-        m.storenum += diff
-        db.session.add_all([m])
-    elif oprtype == Oprenum.CSRINBOUND.name:
-        cs.restorenum -= diff
         cs.inboundnum += diff
         m.storenum += diff
         db.session.add_all([m])
@@ -186,20 +181,26 @@ def form_change_rework():
             batch = r.batch
             service_id = r.service_id
             device_id = r.device_id
-            # print("MN_id"+str(MN_id))
+            Prt.prt(service_id)
             if oprtype==Oprenum.RESTORE.name:
-                if change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
-                    flash("返修列表-修好更新成功")
+                if service_id != None:
+                    flash("请选择售后")
                 else:
-                    flash("返修列表-修好更新失败")
+                    if change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
+                        flash("返修列表-修好更新成功")
+                    else:
+                        flash("返修列表-修好更新失败")
             elif oprtype==Oprenum.SCRAP.name:
-                if change_materials_oprs_db(oprtype=oprtype, materialid=materialid,  device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
-                    flash("返修列表-报废更新成功")
+                if service_id != None:
+                    flash("请选择售后")
                 else:
-                    flash("返修列表-报废更新失败")
+                    if change_materials_oprs_db(oprtype=oprtype, materialid=materialid,  device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
+                        flash("返修列表-报废更新成功")
+                    else:
+                        flash("返修列表-报废更新失败")
             elif oprtype == Oprenum.CSRESTORE.name:
                 Prt.prt(list)
-                if service_id!='None':
+                if service_id!=None:
                     if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id,diff=diff, isgroup=True,batch=batch, comment=comment):
                         flash("返修列表-售后修好更新成功")
                     else:
@@ -207,7 +208,7 @@ def form_change_rework():
                 else:
                     flash("返修列表-不是售后")
             elif oprtype == Oprenum.CSSCRAP.name:
-                if service_id != 'None':
+                if service_id != None:
                     if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id, diff=diff, isgroup=True, batch=batch, comment=comment):
                         flash("返修列表-售后报废更新成功")
                     else:
@@ -230,6 +231,6 @@ def form_change_rework():
         outerjoin(Material, Material.material_id == Rework.material_id).order_by(Rework.batch.desc()).paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
     db.session.close()
     reworkbatches=pagination.items
-    return render_template('rework_material_table.html',form=form,reworkbatches=reworkbatches)
+    return render_template('rework_material_table.html',form=form,reworkbatches=reworkbatches,pagination=pagination )
 
 

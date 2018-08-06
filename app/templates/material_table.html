@@ -17,11 +17,11 @@
              <th>材料ID</th>
              <th>材料名</th>
              <th>入库数量</th>
-             <th>修好数量</th>
-             <th>空闲数量</th>
+             <!--<th>修好数量</th>-->
+             <!--<th>空闲数量</th>-->
              <th>备货数量</th>
              <th>报废数量</th>
-             <th>售出数量</th>
+             <th>售出(出库)数量</th>
              <th>售后售出数量</th>
              <th>警戒值</th>
              <th>参数模板ID</th>
@@ -36,8 +36,8 @@
              {% else %}
              <td>{{entry.storenum}}</td>
              {% endif %}
-             <td>{{entry.restorenum}}</td>
-             <td>{{entry.storenum+entry.restorenum}}</td>
+             <!--<td>{{entry.restorenum}}</td>-->
+             <!--<td>{{entry.storenum+entry.restorenum}}</td>-->
              <td>{{entry.preparenum}}</td>
              <td>{{entry.scrapnum}}</td>
              <td>{{entry.salenum}}</td>
@@ -49,6 +49,10 @@
          {% endfor %}
     </table>
 </div>
-
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'ctr.form_change_material') }}
+</div>
+{% endif %}
 {% endblock %}
 

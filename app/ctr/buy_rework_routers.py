@@ -23,7 +23,9 @@ def form_change_buy():
         # else:
         #     flash("操作类型不存在")
         buy=db.session.query(Buy).filter(Buy.buy_id==buy_id).first()
-        if buy==None:
+        if diff<=0:
+            flash("应该填写正数")
+        elif buy==None:
             flash("订单不存在")
             db.session.close()
         else:
@@ -53,6 +55,7 @@ def form_change_buy():
                 db.session.commit()
                 db.session.flush()
                 db.session.close()
+                flash("备注修改成功")
             else:
                 flash("操作类型错误")
     # print(request)
@@ -100,12 +103,14 @@ def customerservice_change_num(cs,m,diff, oprtype, batch,device_id):
     if oprtype == Oprenum.CSRESTORE.name:
         b = db.session.query(Rework).filter(Rework.batch == batch).first()
         b.num -= diff
+        m.storenum+=diff
         cs.reworknum-=diff
         cs.restorenum+=diff
         if b.num == 0:
             db.session.query(Rework).filter(Rework.batch == batch).delete()
         else:
             db.session.add_all([b])
+        db.session.add_all([m])
     elif oprtype == Oprenum.CSSCRAP.name:
         b = db.session.query(Rework).filter(Rework.batch == batch).first()
         b.num -= diff
@@ -132,23 +137,10 @@ def change_customerservice_oprs_db(oprtype,materialid, service_id,device_id,diff
         flash("售后不存在")
         db.session.close()
         return False
-    if oprtype == Oprenum.CSRESTORE.name or oprtype == Oprenum.CSSCRAP.name:
-        if customerservice_isvalid_num(cs=cs,m=None,diff=diff, oprtype=oprtype, batch=batch,device_id=device_id) == False:
-            flash("数量超标")
-            return False
-        else:
-            value=customerservice_change_num(cs=cs,m=None,diff=diff, oprtype=oprtype, batch=batch,device_id=device_id)
-            o = Opr(service_id=service_id,device_id=device_id,MN_id=device_id,diff=diff, user_id=session['userid'], oprtype=oprtype, isgroup=isgroup,
-                    oprbatch=value,comment=comment, momentary=datetime.datetime.now())
-            db.session.add_all([cs,o])
-            db.session.commit()
-            db.session.flush()
-            db.session.close()
-    if oprtype == Oprenum.CSGINBOUND.name :#or oprtype == Oprenum.CSRINBOUND.name
+    else:
         m = db.session.query(Material).filter(Material.material_id == materialid).first()
         if m == None:
             flash("材料不存在")
-            db.session.close()
             return False
         if customerservice_isvalid_num(cs=cs,m=m,diff=diff, oprtype=oprtype, batch=batch,device_id=device_id) == False:
             flash("数量超标")
@@ -174,7 +166,9 @@ def form_change_rework():
         comment=form.comment.data
         rework_id=form.rework_id.data
         r=db.session.query(Rework).filter(Rework.rework_id==rework_id).first()
-        if r==None:
+        if diff<=0:
+            flash("应该填写正数")
+        elif r==None:
             flash("返修订单不存在")
         else:
             materialid = r.material_id

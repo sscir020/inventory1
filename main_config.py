@@ -51,19 +51,20 @@ class Oprenum(Enum):
     # DINITADD=12
     # DPREPARE=13
     # DOUTBOUND=14
-    CSDRECYCLE=15
+    CSDRECYCLE=12
     # CINITADD=16
-    CSGINBOUND=17
+    CSGINBOUND=13
     # CSRINBOUND=18
-    CSREWORK=19
-    CSRESTORE=20
-    CSSCRAP=21
-    CSBROKEN=22
-    CSDRESALE =23
+    CSREWORK=14
+    CSRESTORE=15
+    CSSCRAP=16
+    CSBROKEN=17
+    CSDRESALE =18
     # RINBOUND =24
-    CSFEE=25
-    CSFEEZERO=26
-    CSDRESTORE = 27
+    CSFEE=19
+    CSFEEZERO=20
+    CSDRESTORE = 21
+    CSMRESALE=22
     COMMENT=32
 oprenumCH ={
     Oprenum.INITADD.name: '新添加材料',#
@@ -93,6 +94,7 @@ oprenumCH ={
     Oprenum.CSFEE.name:'增加售后售出费用',
     Oprenum.CSFEEZERO.name:'欠费清零',
     Oprenum.CSDRESTORE.name:'设备售后修好',
+    Oprenum.CSMRESALE.name:'材料售后售出',
     Oprenum.COMMENT.name:'备注',
 }
 oprenumNum = {
@@ -123,6 +125,7 @@ oprenumNum = {
     '增加售后售出费用':Oprenum.CSFEE,
     '欠费清零':Oprenum.CSFEEZERO,
     '设备售后修好':Oprenum.CSDRESTORE.name,
+    '材料售后售出':Oprenum.CSMRESALE.name,
     '备注':Oprenum.COMMENT,
 }
 

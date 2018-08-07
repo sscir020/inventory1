@@ -586,6 +586,22 @@ from flask_wtf import Form
 #         flash("售后带回数量不等于返修批次数量")
 #         return False
 
+# if oprtype == Oprenum.CSRESTORE.name or oprtype == Oprenum.CSSCRAP.name:
+#     if customerservice_isvalid_num(cs=cs, m=None, diff=diff, oprtype=oprtype, batch=batch,
+#                                    device_id=device_id) == False:
+#         flash("数量超标")
+#         return False
+#     else:
+#         value = customerservice_change_num(cs=cs, m=None, diff=diff, oprtype=oprtype, batch=batch, device_id=device_id)
+#         o = Opr(service_id=service_id, device_id=device_id, MN_id=device_id, material_id=materialid, diff=diff,
+#                 user_id=session['userid'], oprtype=oprtype, isgroup=isgroup,
+#                 oprbatch=value, comment=comment, momentary=datetime.datetime.now())
+#         db.session.add_all([cs, o])
+#         db.session.commit()
+#         db.session.flush()
+#         db.session.close()
+# if oprtype == Oprenum.CSGINBOUND.name:  # or oprtype == Oprenum.CSRINBOUND.name
+
 
 
 

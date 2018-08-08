@@ -142,11 +142,15 @@ def material_isvalid_num_rev (m,device_id,diff,oprtype,batch):
     elif oprtype == Oprenum.RESALE.name:#7
         pass
     elif oprtype == Oprenum.OUTBOUND.name:#8
-        pass
+        if diff > m.salenum:
+            flash("取消备货数量大于售出数量")
+            return False
     elif oprtype == Oprenum.CANCELBUY.name:#9
         pass
     elif oprtype == Oprenum.SCRAP.name:#10
-        pass
+        if diff > m.scrapnum:
+            flash("取消备货数量大于报废数量")
+            return False
     elif oprtype == Oprenum.PREPARE.name:#11
         if diff>m.preparenum:
             flash("取消备货数量大于备货数量")
@@ -198,6 +202,7 @@ def material_change_num_rev(m,device_id,diff,oprtype,batch):
         else:
             b.num += diff
         db.session.add_all([b])
+        m.scrapnum-=diff
     elif oprtype == Oprenum.RECYCLE.name:#8
         cs = db.session.query(Customerservice).filter(Customerservice.material_id == m.material_id).filter( Customerservice.device_id == device_id).filter(Customerservice.isold == False).first()
         if cs == None:
@@ -241,7 +246,10 @@ def customerservice_isvalid_num(cs,m,oprtype,diff,batch):
         pass
     elif oprtype == Oprenum.CSGINBOUND.name:  # 3
         if diff>m.storenum:
-            flash("取消数量大于材料完好入库数量")
+            flash("取消数量大于材料库存数量")
+            return False
+        if diff>cs.inboundnum:
+            flash("取消数量大于材料售后完好入库数量")
             return False
     elif oprtype == Oprenum.CSDRESTORE.name:  # 4
         if 1>cs.restorenum:
@@ -251,15 +259,25 @@ def customerservice_isvalid_num(cs,m,oprtype,diff,batch):
         if diff>cs.brokennum:
             flash("取消数量大于材料损坏数量")
             return False
+    elif oprtype == Oprenum.CSRESTORE.name: #6
+        if diff>m.storenum:
+            flash("取消数量大于材料库存数量")
+            return False
+        if diff>cs.restorenum:
+            flash("取消数量大于材料修好入库数量")
+            return False
     elif oprtype == Oprenum.CSSCRAP.name:#7
         if diff > cs.scrapnum:
+            flash("取消数量大于材料售后报废数量")
+            return False
+        if diff > m.scrapnum:
             flash("取消数量大于材料报废数量")
             return False
     elif oprtype == Oprenum.CSREWORK.name:#8
         if diff>cs.reworknum:
             flash("取消数量大于材料返修数量")
             return False
-    elif oprtype==Oprenum.CSMRESALE.name:
+    elif oprtype==Oprenum.CSMRESALE.name:#9
         if cs.isold==False:
             flash("还没售出")
             return False
@@ -286,6 +304,15 @@ def customerservice_change_num(cs,m,oprtype,diff,batch):
         if cs.goodnum == cs.originnum:
             cs.goodnum = 0
             cs.brokennum = 0
+    elif oprtype == Oprenum.CSRESTORE.name:  # 6
+        b = db.session.query(Rework).filter(Rework.batch == batch).first()
+        if b==None:
+            b=Rework(num=diff,batch=batch,service_id=cs.service_id,material_id=m.material_id)
+        else:
+            b.num += diff
+        m.storenum-=diff
+        cs.reworknum+=diff
+        cs.restorenum-=diff
     elif oprtype == Oprenum.CSSCRAP.name: #7
         b = db.session.query(Rework).filter(Rework.batch == batch).first()
         if b==None:
@@ -295,6 +322,7 @@ def customerservice_change_num(cs,m,oprtype,diff,batch):
         db.session.add(b)
         cs.reworknum += diff
         cs.scrapnum-=diff
+        m.scrapnum -= diff
     elif oprtype==Oprenum.CSREWORK.name: #8
         # b=db.session.query(Rework).filter(Rework.batch==batch).first()
         db.session.query(Rework).filter(Rework.batch == batch).delete()
@@ -313,8 +341,11 @@ def rollback():
         Prt.prt(opr.oprtype)
         cs = db.session.query(Customerservice).filter(Customerservice.service_id == opr.service_id).first()
         if opr.oprtype==Oprenum.CSDRECYCLE.name:#6
-            db.session.query(Customerservice).filter(Customerservice.service_id == opr.service_id).delete()
+            # Prt.prt(opr.service_id)
             db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
+            db.session.commit()
+            db.session.flush()
+            db.session.query(Customerservice).filter(Customerservice.service_id == opr.service_id).delete()
             db.session.commit()
             db.session.flush()
             db.session.close()

@@ -5,49 +5,52 @@
 <div>
     <h4>材料列表</h4>
     <form name="form_material" method="post">
-        材料ID{{form.material_id}}
-        数量{{form.diff}}
-        设备ID{{form.device_id}}
+        <!--材料ID{{form.material_id}}-->
+        <!--数量{{form.diff}}-->
         操作{{form.oprtype}}
+        设备ID(可为空){{form.device_id}}
         备注(可为空){{form.comment}}
+        <table class="table table-hover" id="table_orange">
+             <thead>
+                 <th>材料ID</th>
+                 <th>材料名</th>
+                 <th>入库数量</th>
+                 <!--<th>修好数量</th>-->
+                 <!--<th>空闲数量</th>-->
+                 <th>备货数量</th>
+                 <th>报废数量</th>
+                 <th>售出(出库)数量</th>
+                 <th>售后售出数量</th>
+                 <th>警戒值</th>
+                 <th>参数模板ID</th>
+                 <th>备注</th>
+                 <th>点选-数量</th>
+             </thead>
+             {% for entry in materials %}
+             <tr id="tr_entry">
+                 <td>{{entry.material_id}}</td>
+                 <td>{{entry.material_name}}</td>
+                 {% if entry.storenum < entry.alarm_level  %}
+                 <td  style="color:red">{{entry.storenum}}</td>
+                 {% else %}
+                 <td>{{entry.storenum}}</td>
+                 {% endif %}
+                 <!--<td>{{entry.restorenum}}</td>-->
+                 <!--<td>{{entry.storenum+entry.restorenum}}</td>-->
+                 <td>{{entry.preparenum}}</td>
+                 <td>{{entry.scrapnum}}</td>
+                 <td>{{entry.salenum}}</td>
+                 <td>{{entry.resalenum}}</td>
+                 <td>{{entry.alarm_level}}</td>
+                 <td>{{entry.acces_id}}</td>
+                 <td>{{entry.comment}}</td>
+                 <td><input type="radio" name="input_radio" value="{{entry.material_id}}">
+                     <input type="number" name="input_number_{{entry.material_id}}"></td>
+             </tr>
+             {% endfor %}
+        </table>
         {{form.submit}}
     </form>
-    <table class="table table-hover" id="table_orange">
-         <thead>
-             <th>材料ID</th>
-             <th>材料名</th>
-             <th>入库数量</th>
-             <!--<th>修好数量</th>-->
-             <!--<th>空闲数量</th>-->
-             <th>备货数量</th>
-             <th>报废数量</th>
-             <th>售出(出库)数量</th>
-             <th>售后售出数量</th>
-             <th>警戒值</th>
-             <th>参数模板ID</th>
-             <th>备注</th>
-         </thead>
-         {% for entry in materials %}
-         <tr id="tr_entry">
-             <td>{{entry.material_id}}</td>
-             <td>{{entry.material_name}}</td>
-             {% if entry.storenum < entry.alarm_level  %}
-             <td  style="color:red">{{entry.storenum}}</td>
-             {% else %}
-             <td>{{entry.storenum}}</td>
-             {% endif %}
-             <!--<td>{{entry.restorenum}}</td>-->
-             <!--<td>{{entry.storenum+entry.restorenum}}</td>-->
-             <td>{{entry.preparenum}}</td>
-             <td>{{entry.scrapnum}}</td>
-             <td>{{entry.salenum}}</td>
-             <td>{{entry.resalenum}}</td>
-             <td>{{entry.alarm_level}}</td>
-             <td>{{entry.acces_id}}</td>
-             <td>{{entry.comment}}</td>
-         </tr>
-         {% endfor %}
-    </table>
 </div>
 {% if pagination %}
 <div class="pagination">

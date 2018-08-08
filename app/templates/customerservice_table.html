@@ -7,70 +7,67 @@
 <div>
     <h4>售后列表</h4>
     <form name="form_customerservice" method="post" >
-        售后ID{{form.customerservice_id}}
-        数量{{form.diff}}
+        <!--售后ID{{form.customerservice_id}}-->
+        <!--数量{{form.diff}}-->
         操作{{form.oprtype}}
         备注(可为空){{form.comment}}
+         <table  class="table table-hover" id="table_orange">
+             <thead>
+                 <th>售后ID</th>
+                 <th>材料ID</th>
+                 <th>设备ID</th>
+                 <th>带回数量</th>
+                 <th>完好数量</th>
+                 <th>完好入库数量</th>
+                 <th>损坏数量</th>
+                 <th>返修数量</th>
+                 <th>修好入库数量</th>
+                 <th>报废数量</th>
+                 <th>售后售出数量</th>
+                 <th>售后售出费用</th>
+                 <th>已经售出</th>
+                 <th>备注</th>
+                 <th>点选-数量</th>
+             </thead>
+             {% for entry in customerservice %}
+             <tr>
+                 <td>{{entry.service_id}}</td>
+                 <td>{% if entry.material_id != None %}
+                     {{entry.material_id}}
+                     {% endif %}
+                 </td>
+                 <td>{% if entry.device_id != None %}
+                     {{entry.device_id}}
+                     {% endif %}
+                 </td>
+                 <td>{{entry.originnum}}</td>
+                 <td>{{entry.goodnum}}</td>
+                 <td>{{entry.inboundnum}}</td>
+                 <td>{{entry.brokennum}}</td>
+                 <td>{{entry.reworknum}}</td>
+                 <td>{{entry.restorenum}}</td>
+                 <td>{{entry.scrapnum}}</td>
+                 <td>{{entry.resalenum}}</td>
+                 {% if entry.fee>0 %}
+                 <td style="color:red">{{entry.fee}}</td>
+                 {% else %}
+                 <td>{{entry.fee}}</td>
+                 {% endif %}
+                 <td>{{entry.isold}}</td>
+                 <td>{{entry.comment}}</td>
+                 <td><input type="radio" name="input_radio" value="{{entry.service_id}}">
+                     <input type="number" name="input_number_{{entry.service_id}}"></td>
+             </tr>
+             {% endfor %}
+         </table>
         {{form.submit}}
     </form>
-     <table  class="table table-hover" id="table_orange">
-         <thead>
-             <th>售后ID</th>
-             <th>材料ID</th>
-             <th>设备ID</th>
-             <th>带回数量</th>
-             <th>完好数量</th>
-             <th>完好入库数量</th>
-             <th>损坏数量</th>
-             <th>返修数量</th>
-             <th>修好入库数量</th>
-             <th>报废数量</th>
-             <th>售后售出数量</th>
-             <th>售后售出费用</th>
-             <th>已经售出</th>
-             <th>备注</th>
-         </thead>
-         {% for entry in customerservice %}
-         <tr>
-             <td>{{entry.service_id}}</td>
-             <td>{% if entry.material_id != None %}
-                 {{entry.material_id}}
-                 {% endif %}
-             </td>
-             <td>{% if entry.device_id != None %}
-                 {{entry.device_id}}
-                 {% endif %}
-             </td>
-             <td>{{entry.originnum}}</td>
-             <td>{{entry.goodnum}}</td>
-             <td>{{entry.inboundnum}}</td>
-             <td>{{entry.brokennum}}</td>
-             <td>{{entry.reworknum}}</td>
-             <td>{{entry.restorenum}}</td>
-             <td>{{entry.scrapnum}}</td>
-             <td>{{entry.resalenum}}</td>
-             {% if entry.fee>0 %}
-             <td style="color:red">{{entry.fee}}</td>
-             {% else %}
-             <td>{{entry.fee}}</td>
-             {% endif %}
-             <td>{{entry.isold}}</td>
-             <td>{{entry.comment}}</td>
-         </tr>
-         {% endfor %}
-     </table>
 </div>
 {% if pagination %}
 <div class="pagination">
     {{ macros.pagination_widget(pagination, 'ctr.form_change_customerservice') }}
 </div>
 {% endif %}
-<p>*带回数量=(完好数量+完好入库数量)+(损坏数量+返修数量+报废数量+修好入库数量)</p>
-<p>*设备售后修好，设备售后售出，材料售后售出，欠费清零，数量填任意正数，比如1</p>
-<p> </p>
-<p>设备使用步骤: 1.在设备列表界面操作设备售后带回，2.在售后界面操作设备售后修好，3.在售后界面操作设备售后售出</p>
-<p>材料使用步骤: 1.在材料列表界面操作售后带回，2.在售后界面操作材料售后损坏，3.在售后界面操作材料完好入库</p>
-<p>------------------------------------------------------------------------------------------------------4.在售后界面操作材料售后返修-------5.在返修界面操作售后修好</p>
-<p>---------------------------------------------------------------------------------------------------------------------------------------------------6.在返修界面操作售后报废</p>
-<p>------------------------------------------------------------------------------------------------------7.在售后界面操作材料售后售出-------8.在售后界面操作材料增加费用------9.在售后界面操作欠费清零</p>
+<p>*带回数量=(完好数量+完好入库数量)+(损坏数量+返修数量+修好入库数量+报废数量)</p>
+<p>*设备售后修好，设备售后售出，材料售后售出，欠费清零，不用填写数量</p>
 {% endblock %}

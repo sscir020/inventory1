@@ -6,39 +6,42 @@
 <div>
     <h4>购买列表</h4>
     <form name="form_buy" method="post">
-        购买ID{{form.buy_id}}
-        数量{{form.diff}}
+        <!--购买ID{{form.buy_id}}-->
+        <!--数量{{form.diff}}-->
         操作{{form.oprtype}}
         备注(可为空){{form.comment}}
-        {{form.submit}}
+         <table class="table table-hover" id="table_orange"><!--table-condensed-->
+             <thead>
+                 <th>购买ID</th>
+                 <th>库存ID</th>
+                 <th>库存名称</th>
+                 <th>购买批次</th>
+                 <th>购买数量</th>
+                 <th>备注</th>
+                 <th>点选-数量</th>
+             </thead>
+             {% for entry in buybatches %}
+                 <tr>
+                     <td>{{entry.buy_id}}</td>
+                     <td>{{entry.material_id}}</td>
+                     <td>{{entry.material_name}}</td>
+                     <td>{{entry.batch}}</td>
+                     <td>{{entry.num}}</td>
+                     <td>{{entry.comment}}</td>
+                     <td><input type="radio" name="input_radio" value="{{entry.buy_id}}">
+                         <input type="number" name="input_number_{{entry.buy_id}}"></td>
+                 </tr>
+             {% endfor %}
+         </table>
+         {{form.submit}}
     </form>
-     <table class="table table-hover" id="table_orange"><!--table-condensed-->
-         <thead>
-             <th>购买ID</th>
-             <th>库存ID</th>
-             <th>库存名称</th>
-             <th>购买批次</th>
-             <th>购买数量</th>
-             <th>备注</th>
-         </thead>
-         {% for entry in buybatches %}
-             <tr>
-                 <td>{{entry.buy_id}}</td>
-                 <td>{{entry.material_id}}</td>
-                 <td>{{entry.material_name}}</td>
-                 <td>{{entry.batch}}</td>
-                 <td>{{entry.num}}</td>
-                 <td>{{entry.comment}}</td>
-             </tr>
-         {% endfor %}
-     </table>
 </div>
 {% if pagination %}
 <div class="pagination">
     {{ macros.pagination_widget(pagination, 'ctr.form_change_buy') }}
 </div>
 {% endif %}
-<p>&nbsp;&nbsp;&nbsp;&nbsp;*取消订单填写数量为任意数值，可填写1</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;*取消订单不用填写数量</p>
 {% endblock %}
 
 

@@ -38,34 +38,34 @@ class Config:
 
 class Oprenum(Enum):
     INITADD = 1
-    INBOUND = 2
-    OUTBOUND = 3
-    RESTORE = 4
-    REWORK = 5
-    BUY = 6
-    CANCELBUY=7
-    SCRAP=8
-    RECYCLE=9
-    RESALE=10
-    PREPARE=11
+    BUY = 2
+    REWORK = 3
+    PREPARE = 4
+    OUTBOUND = 5
+    RECYCLE = 6
+    RESALE = 7
+    INBOUND = 8
+    CANCELBUY = 9
+    RESTORE = 10
+    SCRAP = 11
+    CSBROKEN = 12
+    CSGINBOUND = 13
+    CSREWORK = 14
+    CSRESTORE = 15
+    CSSCRAP = 16
+    CSMRESALE = 17
+    CSDRECYCLE = 18
+    CSDRESTORE = 19
+    CSDRESALE = 20
+    CSFEE = 21
+    CSFEEZERO = 22
+    COMMENT = 32
     # DINITADD=12
     # DPREPARE=13
     # DOUTBOUND=14
-    CSDRECYCLE=12
     # CINITADD=16
-    CSGINBOUND=13
     # CSRINBOUND=18
-    CSREWORK=14
-    CSRESTORE=15
-    CSSCRAP=16
-    CSBROKEN=17
-    CSDRESALE =18
     # RINBOUND =24
-    CSFEE=19
-    CSFEEZERO=20
-    CSDRESTORE = 21
-    CSMRESALE=22
-    COMMENT=32
 oprenumCH ={
     Oprenum.INITADD.name: '新添加材料',#
     Oprenum.INBOUND.name: '入库',

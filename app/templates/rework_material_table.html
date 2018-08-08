@@ -5,48 +5,51 @@
 <div>
      <h4>返修列表</h4>
     <form name="form_rework" method="post">
-        返修ID{{form.rework_id}}
-        数量{{form.diff}}
+        <!--返修ID{{form.rework_id}}-->
+        <!--数量{{form.diff}}-->
         操作{{form.oprtype}}
         备注(可为空){{form.comment}}
+         <table class="table table-hover" id="table_orange"><!--table-condensed-->
+             <thead>
+                 <th>返修ID</th>
+                 <th>库存ID</th>
+                 <th>库存名称</th>
+                 <th>设备ID</th>
+                 <th>售后ID</th>
+                 <th>返修批次</th>
+                 <th>返修数量</th>
+                 <th>备注</th>
+                 <th>点选-数量</th>
+             </thead>
+             {% for entry in reworkbatches %}
+             <tr>
+                 <td>{{entry.rework_id}}</td>
+                 <td>{% if entry.material_id != None %}
+                     {{entry.material_id}}
+                     {% endif %}
+                 </td>
+                 <td>{% if entry.material_name != None %}
+                      {{entry.material_name}}
+                      {% endif %}</td>
+                 <td>
+                      {% if entry.device_id != '0' %}
+                      {{entry.device_id}}
+                      {% endif %}
+                 </td>
+                 <td>{% if entry.service_id != None %}
+                     {{entry.service_id}}
+                     {% endif %}
+                 </td>
+                 <td>{{entry.batch}}</td>
+                 <td>{{entry.num}}</td>
+                 <td>{{entry.comment}}</td>
+                 <td><input type="radio" name="input_radio" value="{{entry.rework_id}}">
+                     <input type="number" name="input_number_{{entry.rework_id}}"></td>
+             </tr>
+             {% endfor %}
+         </table>
         {{form.submit}}
     </form>
-     <table class="table table-hover" id="table_orange"><!--table-condensed-->
-         <thead>
-             <th>返修ID</th>
-             <th>库存ID</th>
-             <th>库存名称</th>
-             <th>设备ID</th>
-             <th>售后ID</th>
-             <th>返修批次</th>
-             <th>返修数量</th>
-             <th>备注</th>
-         </thead>
-         {% for entry in reworkbatches %}
-         <tr>
-             <td>{{entry.rework_id}}</td>
-             <td>{% if entry.material_id != None %}
-                 {{entry.material_id}}
-                 {% endif %}
-             </td>
-             <td>{% if entry.material_name != None %}
-                  {{entry.material_name}}
-                  {% endif %}</td>
-             <td>
-                  {% if entry.device_id != '0' %}
-                  {{entry.device_id}}
-                  {% endif %}
-             </td>
-             <td>{% if entry.service_id != None %}
-                 {{entry.service_id}}
-                 {% endif %}
-             </td>
-             <td>{{entry.batch}}</td>
-             <td>{{entry.num}}</td>
-             <td>{{entry.comment}}</td>
-         </tr>
-         {% endfor %}
-     </table>
 </div>
 {% if pagination %}
 <div class="pagination">

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% import "_macros.html" as macros %}
 
+
 {% block page_content %}
 <div>
     <h4>材料列表</h4>
@@ -14,7 +15,7 @@
              <thead>
                  <th>材料ID</th>
                  <th>材料名</th>
-                 <th>入库数量</th>
+                 <th>库存数量</th>
                  <!--<th>修好数量</th>-->
                  <!--<th>空闲数量</th>-->
                  <th>备货数量</th>
@@ -44,11 +45,12 @@
                  <td>{{entry.alarm_level}}</td>
                  <td>{{entry.acces_id}}</td>
                  <td>{{entry.comment}}</td>
-                 <td><input type="radio" name="input_radio" value="{{entry.material_id}}">
-                     <input type="number" name="input_number_{{entry.material_id}}"></td>
+                 <td><input type="checkbox" name="input_checkbox_{{entry.material_id}}"  value="{{entry.material_id}}" onclick="toggle_checkbox()">
+                     <input type="number" name="input_number_{{entry.material_id}}" onclick="toggle_checkbox()"></td>
              </tr>
              {% endfor %}
         </table>
+        <input type="hidden" id="input_hidden" >
         {{form.submit}}
     </form>
 </div>

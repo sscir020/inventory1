@@ -137,8 +137,8 @@ def form_change_customerservice():
                     if cs.isold == True:
                         flash("售后已售出")
                     else:
-                        if diff <= 0:
-                            flash("应该填写正数")
+                        if diff < 0:
+                            flash("应该填写正数或0")
                         elif material_id == None:
                             flash("不是材料")
                         else:
@@ -251,7 +251,7 @@ def form_change_customerservice():
                     flash("操作类型错误")
     # db.session.flush()
     page = request.args.get('page', 1, type=int)
-    pagination = db.session.query(Customerservice).order_by(Customerservice.service_id.desc()).paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
+    pagination = db.session.query(Customerservice).outerjoin(Material,Material.material_id==Customerservice.material_id).order_by(Customerservice.service_id.desc()).paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
     customerservice=pagination.items
     db.session.close()
     return render_template("customerservice_table.html", form=form,customerservice=customerservice,pagination=pagination )

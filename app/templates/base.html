@@ -6,8 +6,29 @@
 	<title>奥斯恩-进销存系统</title>
 	{{ super() }}
 	<link rel="stylesheet" type="text/css" href="static/css/tablelook.css"  >
+	<script>
+		function toggle_checkbox(){
+			alert("#");
+			$(document).ready(function(){
+				alert("&");
+			});
 
-
+			 $("#input_hidden").val(function(i,orgtxt){
+				  return orgtxt+"2";
+		  	});
+			$(document).find("input.txt").css({"color":"red","border":"2px solid red"});
+			nextitem= $(document).find("input.checkbox").first().val();
+			preitem=0;
+			for (i=0;i<100;i+=1){
+				if (preitem == nextitem){
+					break;
+				}
+				alert(nextitem);
+				preitem=nextitem;
+				nextitem= $(document).find("input.checkbox").next().val();
+			}
+		}
+	</script>
 {% endblock %}
 
 {% block navbar %}
@@ -46,7 +67,7 @@
 				<li><a href="{{url_for('ctr.add_material')}}">添加新材料</a></li>
 				<li><a href="{{url_for('ctr.show_join_oprs_main')}}">主要操作记录</a></li>
 				<!--<li><a href="{{url_for('ctr.show_join_oprs')}}">全部操作记录</a></li>-->
-				<li><a href="{{url_for('ctr.form_search_device')}}">搜索操作记录</a></li>
+				<li><a href="{{url_for('ctr.form_search_device')}}">出入货记录</a></li>
 				<!--<li><a href="{{url_for('ctr.show_users')}}">用户列表</a></li>-->
 			</ul>
 		</div>

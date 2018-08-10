@@ -204,15 +204,7 @@ def material_change_num_rev(m,device_id,diff,oprtype,batch):
         db.session.add_all([b])
         m.scrapnum-=diff
     elif oprtype == Oprenum.RECYCLE.name:#8
-        cs = db.session.query(Customerservice).filter(Customerservice.material_id == m.material_id).filter( Customerservice.device_id == device_id).filter(Customerservice.isold == False).first()
-        if cs == None:
-            flash("售后不存在")
-        else:
-            cs.originnum-=diff
-            if cs.originnum==0:
-                db.session.query(Customerservice).filter(Customerservice.material_id == m.material_id).filter( Customerservice.device_id == device_id).filter(Customerservice.isold == False).delete()
-            else:
-                db.session.add_all([cs])
+        pass
     elif oprtype == Oprenum.RESALE.name:#9
         cs = db.session.query(Customerservice).filter(Customerservice.material_id == m.material_id).filter( Customerservice.device_id == device_id).filter(Customerservice.isold == False).first()
         if cs == None:
@@ -386,6 +378,29 @@ def rollback():
             db.session.flush()
             db.session.close()
             flash("回滚成功_主件_新添加材料")
+        elif opr.oprtype == Oprenum.RECYCLE.name:  # 8
+            cs = db.session.query(Customerservice).filter(Customerservice.material_id == opr.material_id).filter(
+                Customerservice.device_id == opr.device_id).filter(Customerservice.isold == False).first()
+            if cs == None:
+                flash("售后不存在")
+            else:
+                if opr.diff!=cs.originnum:
+                    flash("数量不一致")
+                else:
+                    cs.originnum -= opr.diff
+                    if cs.originnum == 0:
+                        material_id= opr.material_id
+                        device_id=opr.device_id
+                        db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
+                        db.session.query(Customerservice).filter(Customerservice.material_id ==material_id).filter(
+                            Customerservice.device_id == device_id).filter(Customerservice.isold == False).delete()
+                    else:
+                        db.session.add_all([cs])
+                        db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
+                    db.session.commit()
+                    db.session.flush()
+                    db.session.close()
+                    flash("回滚成功_主件_售后带回")
         else:
             m = db.session.query(Material).filter_by(material_id=opr.material_id).first()
             if m != None:

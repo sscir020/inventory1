@@ -2,6 +2,7 @@
 {% import "_macros.html" as macros %}
 
 {% block page_content %}
+
 <div>
     <h4>主要操作记录</h4>
     <table class="table table-hover" id="table_orange"><!--table-condensed-->
@@ -56,4 +57,7 @@
     {{ macros.pagination_widget(pagination, 'ctr.show_join_oprs_main') }}
 </div>
 {% endif %}
+
+
+
 {% endblock %}

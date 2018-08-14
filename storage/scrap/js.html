@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>����̳�(runoob.com)</title>
+<script src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js">
+</script>
+<script type="text/javascript">
+	function isactive(element){
+		return element.active==true;
+	};
+function getElements()
+  {
+  var x=document.getElementsByName("page_index");
+  alert(x.length);
+	  alert(x);
+	  active=x.filter(isactive);
+	  alert(active);
+  }
+</script>
+<script>
+
+function toggle(){
+    $("#test").hide();
+	 $("#input_hidden").val(function(i,orgtxt){
+		  return orgtxt+"2";
+  });
+	$(document).find("li.active").children().css({"color":"red","border":"2px solid red"});
+	alert($(document).find("li.active").children().text());
+	nextitem= $(document).find("input.checkbox").first();
+	preitem=undefined;
+	str="{1 :[";
+	str1="";
+	for (i=0;i<10;i+=1){
+
+		if (nextitem.prop("checked")){
+			str1+=","+nextitem.val();
+		}
+		preitem=nextitem;
+
+		nextitem= preitem.next();
+
+		if (preitem.val() == nextitem.val()){
+			break;
+		}
+	};
+	str1 = str1.substr(1);
+	str+=str1+"]}";
+	str=JSON.stringify(str);
+
+	alert(str);
+
+
+			$(document).ready(function(){
+				page=$(document).find("#input_hidden_current").text;
+				alert(page);
+			});
+
+     document.ready(function(){
+            alert("ready");
+      });
+      windows.onload(function(){
+            alert("onload");
+            document.getElementById("input_hidden_pre").value=1;
+
+      });
+document.getElementById("input_text_"+(p-1)).value=-2;
+};
+            document.ready=function(){
+        alert("ready");
+        alert(pagination.pages);
+    }
+             $(document).ready(function(p1,len1){
+          alert("ready");
+          alert(p1);
+          alert(len1);
+           x=document.getElementsByName("input_text");
+             x[p-1].value=-1;
+            alert( x[p-1].value);
+            document.getElementById("input_text_current").value=-2;
+          })
+</script>
+</head>
+
+
+<body>
+<h2>����һ������</h2>
+<p>����һ������</p>
+<p id="test">��������һ������</p>
+<button>����</button>
+	<input type="checkbox" class="checkbox" id="input_checkbox_1" value="86" onclick="toggle()"/>
+	<input type="checkbox" class="checkbox" id="input_checkbox_2" value="87" onclick="getElements()" checked=true/>
+	<input type="checkbox" class="checkbox" id="input_checkbox_3" value="88"  checked=true/>
+	<input type="text" class="txt" id="input_hidden"/>
+	<li class="active" name="page_index">
+
+		<a href="#" >{{ p }}</a>
+	</li>
+
+	<li name="page_index">
+		<a href="#" >{{ p }}</a>
+	</li>
+</body>
+
+
+
+
+</html>

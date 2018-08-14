@@ -115,20 +115,20 @@ class Opr(db.Model):
 class Customerservice(db.Model):
     __tablename__='customerservice'
     service_id= db.Column(db.Integer, nullable=False, primary_key=True)
-    MN_id=db.Column(db.String(32), nullable=False,default='')
     material_id=db.Column(db.Integer,db.ForeignKey('materials.material_id'))
+    material_name = db.Column(db.String(64), nullable=True, default='')
     device_id=db.Column(db.String(16))
-    originnum= db.Column(db.Integer, nullable=True,default=0)
-    goodnum= db.Column(db.Integer, nullable=True,default=0)
-    brokennum= db.Column(db.Integer, nullable=True,default=0)
-    reworknum= db.Column(db.Integer, nullable=True,default=0)
-    restorenum= db.Column(db.Integer, nullable=True,default=0)
-    scrapnum= db.Column(db.Integer, nullable=True,default=0)
-    inboundnum= db.Column(db.Integer, nullable=True,default=0)
-    resalenum= db.Column(db.Integer, nullable=True,default=0)
+    batch = db.Column(db.String(32), nullable=False, unique=True, index=True, default='')
+    originnum= db.Column(db.Integer, nullable=False,default=0)
+    goodnum= db.Column(db.Integer, nullable=False,default=0)
+    brokennum= db.Column(db.Integer, nullable=False,default=0)
+    reworknum= db.Column(db.Integer, nullable=False,default=0)
+    restorenum= db.Column(db.Integer, nullable=False,default=0)
+    scrapnum= db.Column(db.Integer, nullable=False,default=0)
+    inboundnum= db.Column(db.Integer, nullable=False,default=0)
+    resalenum= db.Column(db.Integer, nullable=False,default=0)
     fee= db.Column(db.Integer, nullable=True,default=0)
     comment= db.Column(db.String(64), nullable=True,default='')
-    isold =db.Column(db.Boolean,nullable=False,default=0)
 
 class Accessory(db.Model):
     __tablename__='accessories'

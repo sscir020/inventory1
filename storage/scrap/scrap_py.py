@@ -601,9 +601,137 @@ from flask_wtf import Form
 #         db.session.flush()
 #         db.session.close()
 # if oprtype == Oprenum.CSGINBOUND.name:  # or oprtype == Oprenum.CSRINBOUND.name
+# if oprtype == Oprenum.CSDRESALE.name:  # 18
+#     if cs.isold == True:
+#         flash("售后已售出")
+#     else:
+#         if cs.goodnum + cs.restorenum == 0:
+#             flash("没有完好或修好的设备")
+#         elif material_id != None:
+#             flash("不是设备")
+#         else:
+#             # services = db.session.query(Customerservice).filter(Customerservice.device_id == device_id).filter(Customerservice.isold==False).all()
+#             # print(services)
+#             # isexisted=False
+#             # for s in services:
+#             #     if s.material_id == None:
+#             #         if  s.goodnum + s.restorenum > 0:
+#             #             isexisted=True
+#             #         else:
+#             #             flash("设备没有完好或者修好的数量")
+#             # if isexisted:
+#             #     for s in services:
+#             #         # print(s)
+#             #         # print(s.material_id)
+#             #         Prt.prt(s,'cs.material_id', str(s.material_id),'cs.service_id',s.service_id,s.material_id==None )
+#             #         if s.material_id!=None:
+#             #             m=db.session.query(Material).filter(Material.material_id==s.material_id).first()
+#             #             if m!=None:
+#             #         #     Prt.prt('material_id', m.material_id, 'cs.resalenum', cs.resalenum,m == None)
+#             #                 s.resalenum = s.goodnum + s.restorenum
+#             #                 m.resalenum+=s.resalenum
+#             #                 s.goodnum=0
+#             #                 s.restorenum=0
+#             #                 s.isold = True
+#             #                 o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, diff=s.goodnum, user_id=session['userid'], oprtype=Oprenum.CSRESALE.name,
+#             #                         isgroup=False, oprbatch='', comment=comment, momentary=datetime.datetime.now())
+#             #                 o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, diff=s.restorenum, user_id=session['userid'], oprtype=Oprenum.CSRESALE.name,
+#             #                         isgroup=False, oprbatch='', comment=comment, momentary=datetime.datetime.now())
+#             #                 db.session.add_all([s,m,o])
+#             #         else:
+#             #         #     # Prt.prt('MN_id', MN_id, 'cs.resalenum', cs.resalenum)
+#             #             d=db.session.query(Web_device).filter(Web_device.device_id==device_id).first()
+#             #             if d != None:
+#             #                 s.resalenum = s.goodnum + s.restorenum
+#             #                 # d.resalenum+=s.resalenum
+#             #                 s.goodnum=0
+#             #                 s.restorenum=0
+#             #                 s.isold=True
+#             #             #     # services.delete()
+#             #             #     # db.session.query(Customerservice).filter(Customerservice.MN_id == MN_id).delete()
+#             #                 o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, diff=s.restorenum, user_id=session['userid'], oprtype=Oprenum.CSRESALE.name,
+#             #                         isgroup=True, oprbatch='', comment=comment, momentary=datetime.datetime.now())
+#             #                 db.session.add_all([s,o])
+#
+#             # db.session.add(services)
+#             cs.resalenum = cs.restorenum  # cs.goodnum +
+#             # d.resalenum+=s.resalenum
+#             # o1 = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, material_id=material_id,diff=cs.goodnum,
+#             #         user_id=session['userid'], oprtype=Oprenum.CSDRESALE.name,
+#             #         isgroup=True, oprbatch='', comment=comment, momentary=datetime.datetime.now())
+#             o2 = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, material_id=material_id,
+#                      diff=cs.restorenum, user_id=session['userid'], oprtype=oprtype,
+#                      isgroup=True, oprbatch='', comment=comment, momentary=datetime.datetime.now())
+#             # cs.goodnum = 0
+#             cs.restorenum = 0
+#             cs.isold = True
+#             db.session.add_all([cs, o2])  # o1
+#             db.session.commit()
+#             db.session.flush()
+#             db.session.close()
+#             flash("设备售后售出成功")
+# if oprtype == Oprenum.CSMRESALE.name:  # 1
+#     if cs.isold == True:
+#         flash("售后已售出")
+#     else:
+#         if material_id == None:
+#             flash("不是材料")
+#         else:
+#             cs.isold = True
+#             o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, material_id=material_id, diff=0,
+#                     user_id=session['userid'], oprtype=oprtype,
+#                     isgroup=True, oprbatch='', comment=comment, momentary=datetime.datetime.now())
+#             db.session.add_all([cs, o])
+#             db.session.commit()
+#             db.session.flush()
+#             db.session.close()
+#             flash("材料已经售出")
+#
+#
+# elif oprtype == Oprenum.CSDRESTORE.name:
+#     if cs.isold == True:
+#         flash("售后已售出")
+#     else:
+#         if material_id != None:
+#             flash("不是设备")
+#         else:
+#             cs.brokennum -= 1
+#             cs.restorenum += 1
+#             o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, material_id=material_id, diff=1,
+#                     user_id=session['userid'], oprtype=oprtype,
+#                     isgroup=True, oprbatch='', comment=comment, momentary=datetime.datetime.now())
+#             db.session.add_all([cs, o])
+#             db.session.commit()
+#             db.session.flush()
+#             db.session.close()
+#             flash("设备售后修好成功")
 
-
-
+# if opr.oprtype==Oprenum.CSDRECYCLE.name:#6
+#     # Prt.prt(opr.service_id)
+#     db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
+#     db.session.commit()
+#     db.session.flush()
+#     db.session.query(Customerservice).filter(Customerservice.service_id == opr.service_id).delete()
+#     db.session.commit()
+#     db.session.flush()
+#     db.session.close()
+#     flash("回滚成功_设备带回")
+# elif opr.oprtype==Oprenum.CSDRESALE.name:#9
+#     cs.restorenum=opr.diff
+#     cs.resalenum=0
+#     cs.isold=False
+#     db.session.add(cs)
+#     db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
+#     # db.session.commit()
+#     # db.session.flush()
+#     # opr2 = db.session.query(Opr).order_by(Opr.opr_id.desc()).first()
+#     # cs.goodnum=opr.diff
+#     # db.session.query(Opr).filter_by(opr_id=opr2.opr_id).delete()
+#     db.session.commit()
+#     db.session.flush()
+#     db.session.close()
+#     flash("回滚成功_设备售出")
+# else:
 
 
 

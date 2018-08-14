@@ -20,7 +20,7 @@ class Config:
     SQLALCHEMY_MAX_OVERFLOW = 0
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    FLASK_NUM_PER_PAGE = 15
+    FLASK_NUM_PER_PAGE = 20
     # FLASK_NUM_PER_PAGE_LIST = 6
 #SESSION_TYPE= 'redis'
     SESSION_PERMANENT = True
@@ -53,12 +53,12 @@ class Oprenum(Enum):
     CSREWORK = 14
     CSRESTORE = 15
     CSSCRAP = 16
-    CSMRESALE = 17
-    CSDRECYCLE = 18
-    CSDRESTORE = 19
-    CSDRESALE = 20
-    CSFEE = 21
-    CSFEEZERO = 22
+    # CSMRESALE = 17
+    # CSDRECYCLE = 18
+    # CSDRESTORE = 19
+    # CSDRESALE = 20
+    CSFEE = 17
+    CSFEEZERO = 18
     COMMENT = 32
     # DINITADD=12
     # DPREPARE=13
@@ -81,7 +81,7 @@ oprenumCH ={
     # Oprenum.DINITADD.name:'新添加设备',
     # Oprenum.DPREPARE.name:'设备备货',
     # Oprenum.DOUTBOUND.name:'设备出库',
-    Oprenum.CSDRECYCLE.name:'设备售后带回',
+    # Oprenum.CSDRECYCLE.name:'设备售后带回',
     # Oprenum.CINITADD.name:'新添加客户',#
     Oprenum.CSGINBOUND.name:'材料售后完好入库',
     # Oprenum.CSRINBOUND.name:'材料售后修好入库',
@@ -89,12 +89,12 @@ oprenumCH ={
     Oprenum.CSRESTORE.name:'材料售后修好',
     Oprenum.CSSCRAP.name:'材料售后报废',#
     Oprenum.CSBROKEN.name:'材料售后损坏',
-    Oprenum.CSDRESALE.name:'设备售后售出',
+    # Oprenum.CSDRESALE.name:'设备售后售出',
     # Oprenum.RINBOUND.name:'材料修好入库',
     Oprenum.CSFEE.name:'增加售后售出费用',
     Oprenum.CSFEEZERO.name:'欠费清零',
-    Oprenum.CSDRESTORE.name:'设备售后修好',
-    Oprenum.CSMRESALE.name:'材料售后售出',
+    # Oprenum.CSDRESTORE.name:'设备售后修好',
+    # Oprenum.CSMRESALE.name:'材料售后售出',
     Oprenum.COMMENT.name:'备注',
 }
 oprenumNum = {
@@ -112,7 +112,7 @@ oprenumNum = {
     # '新添加设备':Oprenum.DINITADD,
     # '设备备货':Oprenum.DPREPARE,
     # '设备出库':Oprenum.DOUTBOUND,
-    '设备售后带回':Oprenum.CSDRECYCLE,
+    # '设备售后带回':Oprenum.CSDRECYCLE,
     # '新添加客户':Oprenum.CINITADD,
     '材料售后完好入库':Oprenum.CSGINBOUND,#
     # '材料售后修好入库':Oprenum.CSRINBOUND,#
@@ -120,12 +120,12 @@ oprenumNum = {
     '材料售后修好': Oprenum.CSRESTORE,
     '材料售后报废':Oprenum.CSSCRAP,
     '材料售后损坏':Oprenum.CSBROKEN,
-    '设备售后售出':Oprenum.CSDRESALE,
+    # '设备售后售出':Oprenum.CSDRESALE,
     # '材料修好入库':Oprenum.RINBOUND,
     '增加售后售出费用':Oprenum.CSFEE,
     '欠费清零':Oprenum.CSFEEZERO,
-    '设备售后修好':Oprenum.CSDRESTORE.name,
-    '材料售后售出':Oprenum.CSMRESALE.name,
+    # '设备售后修好':Oprenum.CSDRESTORE.name,
+    # '材料售后售出':Oprenum.CSMRESALE.name,
     '备注':Oprenum.COMMENT,
 }
 

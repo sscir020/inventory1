@@ -118,9 +118,9 @@ create table oprs(
 
 create table customerservice(
         service_id  int not null auto_increment,
-        MN_id varchar(32) not null default '',
+        device_id varchar(32) not null default '',
         material_id int,
-        device_id int,
+        batch varchar(32) not null,
         originnum int not null default 0,
         goodnum int not null default 0,
         brokennum int not null default 0,
@@ -131,21 +131,20 @@ create table customerservice(
         resalenum int not null default 0,
         fee int not null default 0,
         comment varchar(64) default '',
-        isold tinyint(1) default 0,
         primary key(service_id),
 		unique(service_id),
 		foreign key (material_id) references materials(material_id)
 )default charset=utf8;
 
 
-alter table materials convert to character set utf8 collate utf8_unicode_ci;
-alter table users convert to character set utf8 collate utf8_unicode_ci;
-alter table buys convert to character set utf8 collate utf8_unicode_ci;
-alter table reworks convert to character set utf8 collate utf8_unicode_ci;
-alter table accessories convert to character set utf8 collate utf8_unicode_ci;
-alter table oprs convert to character set utf8 collate utf8_unicode_ci;
-alter table device convert to character set utf8 collate utf8_unicode_ci;
-alter table client convert to character set utf8 collate utf8_unicode_ci;
+alter table materials convert to character set utf8 collate utf8_general_ci;
+alter table users convert to character set utf8 collate utf8_general_ci;
+alter table buys convert to character set utf8 collate utf8_general_ci;
+alter table reworks convert to character set utf8 collate utf8_general_ci;
+alter table accessories convert to character set utf8 collate utf8_general_ci;
+alter table oprs convert to character set utf8 collate utf8_general_ci;
+alter table device convert to character set utf8 collate utf8_general_ci;
+alter table client convert to character set utf8 collate utf8_general_ci;
 
 #default-character-set=utf8
 #character-set-server=utf8

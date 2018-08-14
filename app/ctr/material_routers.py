@@ -222,41 +222,62 @@ def change_materials_oprs_db(oprtype,materialid,device_id,diff,isgroup,batch,com
         return False
     else:
         if oprtype == Oprenum.RECYCLE.name:#9
-            cs= db.session.query(Customerservice).filter(Customerservice.material_id==m.material_id).filter(Customerservice.device_id==device_id).filter(Customerservice.isold==False).first()
-            if cs==None:
-                cs = Customerservice(originnum=diff, material_id=m.material_id,device_id=device_id,MN_id=device_id)
-            else:
-                cs.originnum+=diff
-            db.session.add(cs)
-            db.session.flush()
-            o = Opr(material_id=materialid, device_id=device_id, MN_id=device_id,service_id=cs.service_id, diff=diff, user_id=session['userid'],
-                    oprtype=oprtype, isgroup=isgroup, oprbatch='', comment=comment, momentary=datetime.datetime.now())
-            db.session.add_all([m, o])
-            db.session.commit()
-            db.session.flush()
-            db.session.close()
-            return True
-        elif oprtype==Oprenum.RESALE.name:#8
-            cs= db.session.query(Customerservice).filter(Customerservice.material_id==m.material_id).filter(Customerservice.device_id==device_id).filter(Customerservice.isold==False).first()
-            if cs==None:
-                flash("售后不存在")
+            d=db.session.query(Web_device).filter(Web_device.device_id==device_id).first()
+            if d==None:
+                flash("设备不存在")
                 return False
             else:
-                if diff<=m.storenum:
-                    m.storenum-=diff
-                    m.resalenum+=diff
+                batch = datetime.datetime.now()
+                b = db.session.query(Customerservice).filter(Customerservice.batch == batch).first()
+                while b != None:
+                    m.sleep(1)
+                    batch = datetime.datetime.now()
+                    b = db.session.query(Customerservice).filter(Customerservice.batch == batch).first()
+                cs = Customerservice( material_id=m.material_id,material_name=m.material_name,device_id=device_id,batch=batch,originnum=diff)
+
+                db.session.add(cs)
+                db.session.flush()
+                o = Opr(material_id=materialid, device_id=device_id, MN_id=device_id,service_id=cs.service_id, diff=diff, user_id=session['userid'],
+                        oprtype=oprtype, isgroup=isgroup, oprbatch=batch, comment=comment, momentary=datetime.datetime.now())
+                db.session.add_all([m, o])
+                db.session.commit()
+                db.session.flush()
+                db.session.close()
+                return True
+        elif oprtype==Oprenum.RESALE.name:#8
+            d=db.session.query(Web_device).filter(Web_device.device_id==device_id).first()
+            if d==None:
+                flash("设备不存在")
+                return False
+            else:
+                if diff > m.storenum:
+                    flash("库存或者售后修好不足")
+                    return False
+                else:
+                    batch = datetime.datetime.now()
+                    b = db.session.query(Customerservice).filter(Customerservice.batch == batch).first()
+                    while b != None:
+                        m.sleep(1)
+                        batch = datetime.datetime.now()
+                        b = db.session.query(Customerservice).filter(Customerservice.batch == batch).first()
+                    cs = Customerservice(material_id=m.material_id, material_name=m.material_name, device_id=device_id,
+                                         batch=batch, originnum=0, resalenum=diff)
+                    db.session.add(cs)
+                    db.session.flush()
+
+                    m.storenum -= diff
+                    m.resalenum += diff
                     # cs.restorenum-=diff
-                    cs.resalenum+=diff
-                    o = Opr(material_id=materialid, device_id=device_id, MN_id=device_id, service_id=cs.service_id, diff=diff,user_id=session['userid'],
-                            oprtype=oprtype, isgroup=isgroup, oprbatch='', comment=comment, momentary=datetime.datetime.now())
-                    db.session.add_all([m, cs,o])
+                    # cs.resalenum+=diff
+                    o = Opr(material_id=materialid, device_id=device_id, MN_id=device_id, service_id=cs.service_id,
+                            diff=diff, user_id=session['userid'],
+                            oprtype=oprtype, isgroup=isgroup, oprbatch=batch, comment=comment,
+                            momentary=datetime.datetime.now())
+                    db.session.add_all([m, o])
                     db.session.commit()
                     db.session.flush()
                     db.session.close()
                     return True
-                else:
-                    flash("库存或者售后修好不足")
-                    return False
         else:
             value=material_change_num(m=m,diff=diff, oprtype=oprtype, batch=batch,device_id=device_id)
             o = Opr(material_id=materialid, device_id=device_id,MN_id=device_id, diff=diff, user_id=session['userid'], oprtype=oprtype, isgroup=isgroup,
@@ -267,6 +288,7 @@ def change_materials_oprs_db(oprtype,materialid,device_id,diff,isgroup,batch,com
             db.session.close()
         # db.session.close()
     return True
+
 
 
 

@@ -15,7 +15,9 @@
              <thead>
                  <th>售后ID</th>
                  <th>材料ID</th>
+                 <th>材料名称</th>
                  <th>设备ID</th>
+                 <th>批次</th>
                  <th>带回数量</th>
                  <th>完好数量</th>
                  <th>完好入库数量</th>
@@ -25,7 +27,6 @@
                  <th>报废数量</th>
                  <th>售后售出数量</th>
                  <th>售后售出费用</th>
-                 <th>已经售出</th>
                  <th>备注</th>
                  <th>点选-数量</th>
              </thead>
@@ -36,10 +37,15 @@
                      {{entry.material_id}}
                      {% endif %}
                  </td>
+                 <td>{% if entry.material_name != None %}
+                     {{entry.material_name}}
+                     {% endif %}
+                 </td>
                  <td>{% if entry.device_id != None %}
                      {{entry.device_id}}
                      {% endif %}
                  </td>
+                 <td>{{entry.batch}}</td>
                  <td>{{entry.originnum}}</td>
                  <td>{{entry.goodnum}}</td>
                  <td>{{entry.inboundnum}}</td>
@@ -53,9 +59,8 @@
                  {% else %}
                  <td>{{entry.fee}}</td>
                  {% endif %}
-                 <td>{{entry.isold}}</td>
                  <td>{{entry.comment}}</td>
-                 <td><input type="radio" name="input_radio" value="{{entry.service_id}}">
+                 <td><input type="checkbox" name="input_checkbox_{{entry.service_id}}" value="{{entry.service_id}}">
                      <input type="number" name="input_number_{{entry.service_id}}"></td>
              </tr>
              {% endfor %}
@@ -69,5 +74,5 @@
 </div>
 {% endif %}
 <p>*带回数量=(完好数量+完好入库数量)+(损坏数量+返修数量+修好入库数量+报废数量)</p>
-<p>*设备售后修好，设备售后售出，材料售后售出，欠费清零，不用填写数量</p>
+<p>*欠费清零，不用填写数量</p>
 {% endblock %}

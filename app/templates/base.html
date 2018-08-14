@@ -6,29 +6,9 @@
 	<title>奥斯恩-进销存系统</title>
 	{{ super() }}
 	<link rel="stylesheet" type="text/css" href="static/css/tablelook.css"  >
-	<script>
-		function toggle_checkbox(){
-			alert("#");
-			$(document).ready(function(){
-				alert("&");
-			});
+	<!--<script src="../static/jquery-3.3.1.js">-->
 
-			 $("#input_hidden").val(function(i,orgtxt){
-				  return orgtxt+"2";
-		  	});
-			$(document).find("input.txt").css({"color":"red","border":"2px solid red"});
-			nextitem= $(document).find("input.checkbox").first().val();
-			preitem=0;
-			for (i=0;i<100;i+=1){
-				if (preitem == nextitem){
-					break;
-				}
-				alert(nextitem);
-				preitem=nextitem;
-				nextitem= $(document).find("input.checkbox").next().val();
-			}
-		}
-	</script>
+
 {% endblock %}
 
 {% block navbar %}
@@ -63,7 +43,6 @@
 				<li><a href="{{url_for('ctr.form_change_customerservice')}}"> 售后列表</a></li>
 				<li><a href="{{url_for('ctr.form_change_buy')}}"> 购买列表</a></li>
 				<li><a href="{{url_for('ctr.form_change_rework')}}"> 返修列表</a></li>
-				<li><a href="{{url_for('ctr.form_change_device')}}"> 设备列表</a></li>
 				<li><a href="{{url_for('ctr.add_material')}}">添加新材料</a></li>
 				<li><a href="{{url_for('ctr.show_join_oprs_main')}}">主要操作记录</a></li>
 				<!--<li><a href="{{url_for('ctr.show_join_oprs')}}">全部操作记录</a></li>-->
@@ -73,11 +52,15 @@
 		</div>
 	</div>
 </nav>
+
 {% endblock %}
 
 
 
 {% block content %}
+
+
+
 <div class="container">
 	{% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
@@ -86,6 +69,8 @@
     </div>
     {% endfor %}
 
-    {% block page_content %}{% endblock %}
+    {% block page_content %}
+
+	{% endblock %}
 </div>
 {% endblock %}

@@ -28,7 +28,7 @@
                      <td>{{entry.batch}}</td>
                      <td>{{entry.num}}</td>
                      <td>{{entry.comment}}</td>
-                     <td><input type="radio" name="input_radio" value="{{entry.buy_id}}">
+                     <td><input type="checkbox" name="input_checkbox_{{entry.buy_id}}" value="{{entry.buy_id}}">
                          <input type="number" name="input_number_{{entry.buy_id}}"></td>
                  </tr>
              {% endfor %}

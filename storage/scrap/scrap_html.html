@@ -162,8 +162,64 @@
                  <!--<td>{{entry.resalenum}}</td>-->
                  <!--<td>{{entry.acces_id}}</td>-->
 
+<!--<li><a href="{{url_for('ctr.form_change_device')}}"> 设备列表</a></li>-->
+			str="";
+			items=document.getElementsByClassName("checkbox");
+			for (i=0;i<items.length;i+=1){
+				if (items[i].checked==True){
+					str+=items[i].value+","
+				}
+			}
+
+			obj=JSON.parse(document.getElementById("").value);
+			obj[p]=str;
+			document.getElementById("").value=obj;
+
+ onclick="write_checkbox('{{pagination.page}}','{{pagination.pages}}')"
+
+                <a href="{{ url_for(endpoint, page = p, **kwargs) }}"  value="{{ p }}"   >{{ p }}</a>
+
+	<div>
+	{% for i in range(0,pagination.pages) %}
+	<input type="text" name="input_text" id="input_text_{{i}}"  value="{{i}}"/>
+	{% endfor %}
+	<input type="text" name="input_text_total" id="input_text_total" value="{{pagination.pages}}" />
+	<input type="text" name="input_text_current" id="input_text_current"  value="{{pagination.page}}" />
+	<input type="text" name="input_text_pre" id="input_text_pre"  value="{{pre}}" />
+	</div>
+<script src="../static/jquery-3.3.1.js">
+
+</script>
+
+<script>
+    function write_checkbox(p,len){
+        alert(p);
+           alert(len);
+            document.getElementById("input_text_pre").value=p;
+               x=document.getElementsByName("input_text");
+            alert(x);
+         $(window).on("load",function(){
+         alert("load");
+         var p1=document.getElementById("input_text_current");
+         var len1=document.getElementById("input_text_total");
+
+          alert(p1.value);
+          alert(len1.value);
+
+          var str="input_text_"+(p1.value-1);
+          alert(str);
+           y=document.getElementById(str);
+           alert(y);
+           y.value=-2;
+           x=document.getElementsByName("input_text");
+           document.getElementsByName("input_text")[p1-1].value=-1;
+            alert( x[p1-1].value);
+            document.getElementById("input_text_current").value=-2;
+          });
+    }
 
 
+</script>
 
 
 

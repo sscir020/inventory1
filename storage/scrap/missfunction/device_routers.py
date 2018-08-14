@@ -1,11 +1,11 @@
 
 from flask import render_template,url_for,redirect,flash,session,request,current_app
 from main_config import oprenumNum,Oprenum,Prt
-from ..models import Opr,Material,User,Buy,Rework,Customerservice,Web_device#Accessory
-from ..decorators import loggedin_required
-from ..__init__ import db
-from .forms import LoginForm,RegistrationForm,AddMaterialForm,DeviceForm
-from . import ctr
+from app.models import Opr,Material,User,Buy,Rework,Customerservice,Web_device#Accessory
+from app.decorators import loggedin_required
+from app import db
+from app.ctr.forms import LoginForm,RegistrationForm,AddMaterialForm,DeviceForm
+from app.ctr import ctr
 
 import json,datetime
 

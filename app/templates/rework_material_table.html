@@ -43,7 +43,7 @@
                  <td>{{entry.batch}}</td>
                  <td>{{entry.num}}</td>
                  <td>{{entry.comment}}</td>
-                 <td><input type="radio" name="input_radio" value="{{entry.rework_id}}">
+                 <td><input type="checkbox" name="input_checkbox_{{entry.rework_id}}" value="{{entry.rework_id}}">
                      <input type="number" name="input_number_{{entry.rework_id}}"></td>
              </tr>
              {% endfor %}
@@ -56,7 +56,7 @@
     {{ macros.pagination_widget(pagination, 'ctr.form_change_rework') }}
 </div>
 {% endif %}
-<p>有设备号的返修材料请选择 材料售后修好/材料售后报废</p>
+<p>有设备号的返修请选择 材料售后修好/材料售后报废</p>
 {% endblock %}
 
 

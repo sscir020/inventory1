@@ -42,7 +42,10 @@
                  </td>
                  <td>{{entry.batch}}</td>
                  <td>{{entry.num}}</td>
-                 <td>{{entry.comment}}</td>
+                 <td>{% if entry.comment != None %}
+                     {{entry.comment}}
+                     {% endif %}
+                 </td>
                  <td><input type="checkbox" name="input_checkbox_{{entry.rework_id}}" value="{{entry.rework_id}}">
                      <input type="number" name="input_number_{{entry.rework_id}}"></td>
              </tr>

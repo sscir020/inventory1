@@ -411,9 +411,14 @@ def form_change_material():
     # if page==None:
     #     page=1
     # db.session.flush()
-    page = request.args.get('page',1,type=int)
-    pagination =db.session.query(Material).order_by(Material.material_id.desc()).\
+
+    p=0
+    page = request.args.get('page',p,type=int)
+    flash(p)
+    flash(page)
+    pagination =db.session.query(Material).order_by(Material.material_id).\
         paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
     materials=pagination.items
+    flash(pagination.page)
     db.session.close()
     return render_template('material_table.html',form=form,materials=materials,pagination=pagination )

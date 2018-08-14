@@ -199,6 +199,7 @@ def form_change_rework():
                             else:
                                 if change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
                                     flash("返修列表-修好更新成功")
+                                    j+=1
                                 else:
                                     flash("返修列表-修好更新失败")
                         elif oprtype==Oprenum.SCRAP.name:

@@ -59,7 +59,10 @@
                  {% else %}
                  <td>{{entry.fee}}</td>
                  {% endif %}
-                 <td>{{entry.comment}}</td>
+                 <td>{% if entry.comment != None %}
+                 {{entry.comment}}
+                 {% endif %}
+                 </td>
                  <td><input type="checkbox" name="input_checkbox_{{entry.service_id}}" value="{{entry.service_id}}">
                      <input type="number" name="input_number_{{entry.service_id}}"></td>
              </tr>

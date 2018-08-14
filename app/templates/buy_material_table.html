@@ -27,7 +27,10 @@
                      <td>{{entry.material_name}}</td>
                      <td>{{entry.batch}}</td>
                      <td>{{entry.num}}</td>
-                     <td>{{entry.comment}}</td>
+                     <td>{% if entry.comment != None %}
+                         {{entry.comment}}
+                         {% endif %}
+                     </td>
                      <td><input type="checkbox" name="input_checkbox_{{entry.buy_id}}" value="{{entry.buy_id}}">
                          <input type="number" name="input_number_{{entry.buy_id}}"></td>
                  </tr>

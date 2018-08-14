@@ -44,7 +44,10 @@
                  <td>{{entry.resalenum}}</td>
                  <td>{{entry.alarm_level}}</td>
                  <td>{{entry.acces_id}}</td>
-                 <td>{{entry.comment}}</td>
+                 <td>{% if entry.comment != None %}
+                     {{entry.comment}}
+                     {% endif %}
+                 </td>
                  <td><input type="checkbox" name="input_checkbox_{{entry.material_id}}"  value="{{entry.material_id}}" onclick="toggle_checkbox()">
                      <input type="number" name="input_number_{{entry.material_id}}" onclick="toggle_checkbox()"></td>
              </tr>

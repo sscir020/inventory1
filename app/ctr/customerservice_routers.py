@@ -169,8 +169,11 @@ def form_change_customerservice():
                             flash("操作类型错误")
             flash("共选了" + str(i) + "条，" + str(j) + "条更新成功，" + str(i - j) + "条更新失败")
     # db.session.flush()
+
     page = request.args.get('page', 1, type=int)
+
     pagination = db.session.query(Customerservice).order_by(Customerservice.service_id.desc()).paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
     customerservice=pagination.items
+
     db.session.close()
     return render_template("customerservice_table.html", form=form,customerservice=customerservice,pagination=pagination )

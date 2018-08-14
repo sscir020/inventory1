@@ -46,7 +46,10 @@
                  <td>{{entry.diff}}</td>
                  <td>{{entry.oprbatch}}</td>
                  <td>{{entry.isgroup}}</td>
-                 <td>{{entry.comment}}</td>
+                 <td>{% if entry.comment != None %}
+                     {{entry.comment}}
+                     {% endif %}
+                 </td>
                  <td>{{entry.user_name}}</td>
                  <td>{{entry.momentary}}</td>
              </tr>

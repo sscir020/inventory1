@@ -56,6 +56,7 @@ def form_change_customerservice():
                                     db.session.flush()
                                     db.session.close()
                                     flash("设备损坏更新成功")
+                                    j+=1
                                 else:
                                     if diff > cs.goodnum:
                                         flash("损坏数量大于售后带回数量")
@@ -70,6 +71,7 @@ def form_change_customerservice():
                                         db.session.flush()
                                         db.session.close()
                                         flash("设备损坏更新成功")
+                                        j += 1
                                         # else:
                                         #     flash("损害的数量大于售后带回总数量")
                         elif oprtype == Oprenum.CSREWORK.name:#20
@@ -98,6 +100,7 @@ def form_change_customerservice():
                                 db.session.flush()
                                 db.session.close()
                                 flash("售后返修成功")
+                                j += 1
                         elif oprtype == Oprenum.CSGINBOUND.name:#21
                             if diff <= 0:
                                 flash("应该填写正数")
@@ -123,6 +126,7 @@ def form_change_customerservice():
                                         db.session.flush()
                                         db.session.close()
                                         flash("完好入库成功")
+                                        j += 1
                                     else:
                                         flash("材料不存在")
                                         db.session.close()
@@ -138,6 +142,7 @@ def form_change_customerservice():
                                 db.session.flush()
                                 db.session.close()
                                 flash("增加费用成功")
+                                j += 1
                         elif oprtype == Oprenum.CSFEEZERO.name:  # 22
                             if session['role']>1:
                                 temp=cs.fee
@@ -149,6 +154,7 @@ def form_change_customerservice():
                                 db.session.flush()
                                 db.session.close()
                                 flash("欠费清零成功")
+                                j += 1
                             else:
                                 flash("没有足够权限")
                         elif oprtype==Oprenum.COMMENT.name:
@@ -158,6 +164,7 @@ def form_change_customerservice():
                             db.session.flush()
                             db.session.close()
                             flash("备注修改成功")
+                            j += 1
                         else:
                             flash("操作类型错误")
             flash("共选了" + str(i) + "条，" + str(j) + "条更新成功，" + str(i - j) + "条更新失败")

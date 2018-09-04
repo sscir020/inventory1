@@ -15,6 +15,7 @@ import datetime
 def form_change_customerservice():
     form = CustomerserviceForm(request.form)
     if request.method == "POST":
+        ischecked = False
         for key in request.form.keys():
             if "input_checkbox" in key:
                 ischecked=True

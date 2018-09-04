@@ -1,20 +1,21 @@
 {% macro pagination_widget(pagination, endpoint) %}
 <ul class="pagination">
     <li {% if not pagination.has_prev %} class="disabled"{% endif %}>
-        <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}{% else %}#{% endif %}">
+        <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num,prepage=1, **kwargs) }}{% else %}#{% endif %}">
             &laquo
         </a>
     </li>
-
+    {% set prepagenum = pagination.page  %}
+    <!--<input type="text" name="input_text_prepage" value="{{prepagenum}}"/>-->
     {% for p in pagination.iter_pages() %}
         {% if p %}
             {% if p == pagination.page %}
             <li class="active" name="page_index">
-                <a href="{{ url_for(endpoint, page = p, **kwargs) }}" value="{{ p }}" >{{ p }}</a>
+                <a href="{{ url_for(endpoint, page = p, prepage=prepagenum,**kwargs) }}" value="{{ p }}" >{{ p }}</a>
             </li>
             {% else %}
             <li name="page_index">
-                <a href="{{ url_for(endpoint, page = p, **kwargs) }}"  value="{{ p }}"   >{{ p }}</a>
+                <a href="{{ url_for(endpoint, page = p,prepage=prepagenum, **kwargs) }}"  value="{{ p }}"   >{{ p }}</a>
             </li>
             {% endif %}
         {% else %}
@@ -23,7 +24,7 @@
     {% endfor %}
 
     <li {% if not pagination.has_next %} class="disabled"{% endif %}>
-        <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}{% else %}#{% endif %}">
+        <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.next_num,prepage=pagination.pages, **kwargs) }}{% else %}#{% endif %}">
             &raquo
         </a>
     </li>

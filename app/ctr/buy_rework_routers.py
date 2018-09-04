@@ -17,6 +17,7 @@ def form_change_buy():
         print(request.form)
         print(form)
         # diff=form.diff.data
+        ischecked=False
         for key in request.form.keys():
             if "input_checkbox" in key:
                 ischecked=True
@@ -166,6 +167,7 @@ def form_change_rework():
     form=ReworkForm(request.form)
     if request.method=="POST":
         # print(request.form)
+        ischecked = False
         for key in request.form.keys():
             if "input_checkbox" in key:
                 ischecked=True

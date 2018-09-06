@@ -278,6 +278,7 @@ def change_materials_oprs_db(oprtype,materialid,device_id,diff,isgroup,batch,com
                     db.session.flush()
                     db.session.close()
                     return True
+
         else:
             value=material_change_num(m=m,diff=diff, oprtype=oprtype, batch=batch,device_id=device_id)
             o = Opr(material_id=materialid, device_id=device_id,MN_id=device_id, diff=diff, user_id=session['userid'], oprtype=oprtype, isgroup=isgroup,
@@ -290,16 +291,15 @@ def change_materials_oprs_db(oprtype,materialid,device_id,diff,isgroup,batch,com
     return True
 
 
-
-
-
 @ctr.route('/form_change_material_act', methods=['GET', 'POST'])
 @loggedin_required
 def form_change_material():
     form=ChangeMaterialForm(request.form)
+    condition = None
     ischecked = False
     if request.method=="POST":
         print(request.form)
+        condition = form.condition.data
         for key in request.form.keys():
             if "input_checkbox" in key:
                 ischecked=True
@@ -401,6 +401,15 @@ def form_change_material():
                             db.session.close()
                             flash("备注修改成功")
                             j += 1
+                        elif oprtype == Oprenum.ALTERNAME.name:
+                            m = db.session.query(Material).filter(Material.material_id == material_id).first()
+                            m.material_name = comment
+                            db.session.add(m)
+                            db.session.commit()
+                            db.session.flush()
+                            db.session.close()
+                            flash("名称修改成功")
+                            j += 1
                         else:
                             flash("错误的操作类型")
             flash("共选了"+str(i)+"条，"+str(j)+"条更新成功，"+str(i-j)+"条更新失败")
@@ -412,15 +421,14 @@ def form_change_material():
     #     page=1
     # db.session.flush()
 
-
     page = request.args.get('page',1,type=int)
-    prepage = request.args.get('prepage', 1, type=int)
-    Prt.prt(request.args)
-    Prt.prt(page,prepage)
-    flash(prepage)
-    pagination =db.session.query(Material).order_by(Material.material_id).\
+    # prepage = request.args.get('prepage', 1, type=int)
+    # Prt.prt(request.args)
+    # Prt.prt(page,prepage)
+    # flash(prepage)
+    pagination =db.session.query(Material).filter(Material.material_name.like('%'+condition+'%') if condition is not None else "").order_by(Material.material_id).\
         paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
     materials=pagination.items
 
     db.session.close()
-    return render_template('material_table.html',form=form,materials=materials,pagination=pagination )
+    return render_template('material_table.html',form=form,materials=materials,pagination=pagination,db=db,Opr=Opr )

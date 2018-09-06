@@ -3,6 +3,10 @@
 
 
 {% block page_content %}
+<div style="float:right">
+    {% set record=db.session.query(Opr).order_by(Opr.opr_id.desc()).first() %}
+    <label>Last Update: {{ record.momentary }}</label>
+</div>
 <div>
     <h4>材料列表</h4>
     <form name="form_material" method="post">
@@ -10,7 +14,8 @@
         <!--数量{{form.diff}}-->
         操作{{form.oprtype}}
         设备ID(可为空){{form.device_id}}
-        备注(可为空){{form.comment}}
+        材料名/备注(可为空){{form.comment}}
+        筛选条件(可为空){{form.condition}}
         <table class="table table-hover" id="table_orange">
              <thead>
                  <th>材料ID</th>

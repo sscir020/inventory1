@@ -59,6 +59,7 @@ class Oprenum(Enum):
     # CSDRESALE = 20
     CSFEE = 17
     CSFEEZERO = 18
+    ALTERNAME=31
     COMMENT = 32
     # DINITADD=12
     # DPREPARE=13
@@ -95,6 +96,7 @@ oprenumCH ={
     Oprenum.CSFEEZERO.name:'欠费清零',
     # Oprenum.CSDRESTORE.name:'设备售后修好',
     # Oprenum.CSMRESALE.name:'材料售后售出',
+    Oprenum.ALTERNAME.name:'修改材料名称',
     Oprenum.COMMENT.name:'备注',
 }
 oprenumNum = {
@@ -126,6 +128,7 @@ oprenumNum = {
     '欠费清零':Oprenum.CSFEEZERO,
     # '设备售后修好':Oprenum.CSDRESTORE.name,
     # '材料售后售出':Oprenum.CSMRESALE.name,
+    '修改材料名称':Oprenum.ALTERNAME,
     '备注':Oprenum.COMMENT,
 }
 

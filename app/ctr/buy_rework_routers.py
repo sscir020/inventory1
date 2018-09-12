@@ -48,6 +48,7 @@ def form_change_buy():
                             elif change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
                                 flash("入库更新成功")
                                 j+=1
+                                return redirect(url_for("ctr.form_change_buy"))
                             else:
                                 flash("入库更新错误")
                         elif oprtype==Oprenum.CANCELBUY.name:
@@ -63,6 +64,7 @@ def form_change_buy():
                             db.session.close()
                             flash("订单取消成功")
                             j+=1
+                            return redirect(url_for("ctr.form_change_buy"))
                         elif oprtype==Oprenum.COMMENT.name:
                             b = db.session.query(Buy).filter(Buy.batch == batch).first()
                             b.comment=comment
@@ -72,6 +74,7 @@ def form_change_buy():
                             db.session.close()
                             flash("备注修改成功")
                             j+=1
+                            return redirect(url_for("ctr.form_change_buy"))
                         else:
                             flash("操作类型错误")
             flash("共选了"+str(i)+"条，"+str(j)+"条更新成功，"+str(i-j)+"条更新失败")
@@ -202,6 +205,7 @@ def form_change_rework():
                                 if change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
                                     flash("返修列表-修好更新成功")
                                     j+=1
+                                    return redirect(url_for("ctr.form_change_rework"))
                                 else:
                                     flash("返修列表-修好更新失败")
                         elif oprtype==Oprenum.SCRAP.name:
@@ -213,6 +217,7 @@ def form_change_rework():
                                 if change_materials_oprs_db(oprtype=oprtype, materialid=materialid,  device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
                                     flash("返修列表-报废更新成功")
                                     j += 1
+                                    return redirect(url_for("ctr.form_change_rework"))
                                 else:
                                     flash("返修列表-报废更新失败")
                         elif oprtype == Oprenum.CSRESTORE.name:
@@ -223,6 +228,7 @@ def form_change_rework():
                                 if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id,diff=diff, isgroup=True,batch=batch, comment=comment):
                                     flash("返修列表-售后修好更新成功")
                                     j += 1
+                                    return redirect(url_for("ctr.form_change_rework"))
                                 else:
                                     flash("返修列表-售后修好更新失败")
                             else:
@@ -234,6 +240,7 @@ def form_change_rework():
                                 if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id, diff=diff, isgroup=True, batch=batch, comment=comment):
                                     flash("返修列表-售后报废更新成功")
                                     j += 1
+                                    return redirect(url_for("ctr.form_change_rework"))
                                 else:
                                     flash("返修列表-售后报废更新失败")
                             else:
@@ -247,6 +254,7 @@ def form_change_rework():
                             db.session.close()
                             flash("备注修改成功")
                             j += 1
+                            return redirect(url_for("ctr.form_change_rework"))
                         else:
                             flash("操作类型错误")
             flash("共选了" + str(i) + "条，" + str(j) + "条更新成功，" + str(i - j) + "条更新失败")

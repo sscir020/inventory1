@@ -330,6 +330,7 @@ def form_change_material():
                             elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id='',diff=diff,isgroup=True, batch='', comment='')==True:
                                 flash("购买列表数量更新成功")
                                 j+=1
+                                return redirect(url_for("ctr.form_change_material"))
                             else:
                                 flash("购买列表数量更新失败")
                         elif oprtype == Oprenum.REWORK.name:#2
@@ -338,6 +339,7 @@ def form_change_material():
                             elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id='',diff=diff,isgroup=True, batch='',  comment='')==True:
                                 flash("返修列表数量更新成功")
                                 j += 1
+                                return redirect(url_for("ctr.form_change_material"))
                             else:
                                 flash("返修列表数量更新失败")
                         elif oprtype == Oprenum.PREPARE.name:#3
@@ -346,6 +348,7 @@ def form_change_material():
                             elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id,device_id='',  diff=diff, isgroup=True, batch='', comment='') == True:
                                 flash("备货数量更新成功")
                                 j += 1
+                                return redirect(url_for("ctr.form_change_material"))
                             else:
                                 flash("备货数量更新失败")
                         elif oprtype==Oprenum.OUTBOUND.name:#4
@@ -361,6 +364,7 @@ def form_change_material():
                                     if change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id=device_id,diff=diff,isgroup=True, batch='',  comment='') == True:
                                         flash("出库数量更新成功")
                                         j += 1
+                                        return redirect(url_for("ctr.form_change_material"))
                                     else:
                                         flash("出库数量更新失败")
                         elif oprtype == Oprenum.RECYCLE.name:#5
@@ -376,6 +380,7 @@ def form_change_material():
                                     if change_materials_oprs_db(oprtype=oprtype, materialid=material_id,device_id=device_id, diff=diff,isgroup=True, batch='',  comment='')==True:
                                          flash("售后带回到售后列表数量更新成功")
                                          j += 1
+                                         return redirect(url_for("ctr.form_change_material"))
                                     else:
                                         flash("售后带回到售后列表数量更新失败")
                         elif oprtype == Oprenum.RESALE.name:#6
@@ -391,6 +396,7 @@ def form_change_material():
                                     if change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id=device_id,diff=diff,isgroup=True, batch='', comment='')==True:
                                         flash("售后带出列表数量更新成功")
                                         j += 1
+                                        return redirect(url_for("ctr.form_change_material"))
                                     else:
                                         flash("售后带出列表数量更新失败")
                         elif oprtype==Oprenum.COMMENT.name:
@@ -401,6 +407,7 @@ def form_change_material():
                             db.session.close()
                             flash("备注修改成功")
                             j += 1
+                            return redirect(url_for("ctr.form_change_material"))
                         elif oprtype == Oprenum.ALTERNAME.name:
                             m = db.session.query(Material).filter(Material.material_id == material_id).first()
                             m.material_name = comment
@@ -410,6 +417,7 @@ def form_change_material():
                             db.session.close()
                             flash("名称修改成功")
                             j += 1
+                            return redirect(url_for("ctr.form_change_material"))
                         else:
                             flash("错误的操作类型")
             flash("共选了"+str(i)+"条，"+str(j)+"条更新成功，"+str(i-j)+"条更新失败")

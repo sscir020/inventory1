@@ -23,7 +23,8 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('注册')
 
 class SearchDeviceForm(FlaskForm):
-    device_id=StringField("设备id",validators=[DataRequired()])
+    device_id=StringField("设备id(可为空)")
+    material_id=StringField("材料id(可为空)")
     submit=SubmitField("搜索")
 
 class ChangeMaterialForm(Form):#7

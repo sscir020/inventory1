@@ -1,7 +1,7 @@
 
 from flask import render_template,url_for,redirect,flash,session,request,current_app
 from main_config import oprenumNum,Oprenum,Prt,oprenumCH
-from ..models import Opr,Material,User,Buy,Rework,Customerservice#Device,Client,Accessory
+from ..models import Opr,Material,User,Buy,Rework,Customerservice,CancelOpr#Device,Client,Accessory
 from ..decorators import loggedin_required
 from ..__init__ import db
 from .forms import LoginForm,RegistrationForm,AddMaterialForm,SearchDeviceForm
@@ -130,6 +130,14 @@ def material_isvalid_num_rev (m,device_id,diff,oprtype,batch):
         if diff!=b.num:
             flash("取消返修数量不等于返修批次数量")
             return False
+    elif oprtype == Oprenum.SHREWORK.name:#2
+        b=db.session.query(Rework).filter(Rework.batch == batch).first()
+        if b==None:
+            flash("返修批次不存在"+str(batch))
+            return False
+        if diff!=b.num:
+            flash("取消返修数量不等于返修批次数量")
+            return False
     elif oprtype==Oprenum.INBOUND.name:#3
         if diff>m.storenum:# 5 2  -> 7 0
             flash("取消入库数量大于库存数量")
@@ -148,6 +156,8 @@ def material_isvalid_num_rev (m,device_id,diff,oprtype,batch):
         pass
     elif oprtype == Oprenum.RESALE.name:#7
         pass
+    elif oprtype == Oprenum.SHRESALE.name:#7
+        pass
     elif oprtype == Oprenum.OUTBOUND.name:#8
         if diff > m.salenum:
             flash("取消备货数量大于售出数量")
@@ -159,6 +169,10 @@ def material_isvalid_num_rev (m,device_id,diff,oprtype,batch):
             flash("取消备货数量大于报废数量")
             return False
     elif oprtype == Oprenum.PREPARE.name:#11
+        if diff>m.preparenum:
+            flash("取消备货数量大于备货数量")
+            return False
+    elif oprtype == Oprenum.SHPREPARE.name:#11
         if diff>m.preparenum:
             flash("取消备货数量大于备货数量")
             return False
@@ -181,6 +195,10 @@ def material_change_num_rev(m,device_id,diff,oprtype,batch):
         db.session.query(Buy).filter(Buy.batch == batch).delete()
     elif oprtype == Oprenum.REWORK.name:#++++#3
         m.storenum += diff
+        db.session.query(Rework).filter(Rework.batch == batch).delete()
+        db.session.add_all([m])
+    elif oprtype == Oprenum.SHREWORK.name:#++++#3
+        m.restorenum += diff
         db.session.query(Rework).filter(Rework.batch == batch).delete()
         db.session.add_all([m])
     elif oprtype==Oprenum.INBOUND.name:#----#4
@@ -214,12 +232,16 @@ def material_change_num_rev(m,device_id,diff,oprtype,batch):
         pass
     elif oprtype == Oprenum.RESALE.name:#9
         pass
+    elif oprtype == Oprenum.SHRESALE.name:#9
+        pass
     elif oprtype == Oprenum.INITADD.name:######11
         pass
     elif oprtype == Oprenum.PREPARE.name:#10
         m.storenum+=diff
         m.preparenum-=diff
-
+    elif oprtype == Oprenum.SHPREPARE.name:#10
+        m.restorenum+=diff
+        m.preparenum-=diff
     else:
         flash("操作类型错误")
         value='-1'
@@ -251,9 +273,9 @@ def customerservice_isvalid_num(cs,m,oprtype,diff,batch):
             flash("取消数量大于材料损坏数量")
             return False
     elif oprtype == Oprenum.CSRESTORE.name: #6
-        if diff>m.storenum:
-            flash("取消数量大于材料库存数量")
-            return False
+        # if diff>m.storenum:
+        #     flash("取消数量大于材料库存数量")
+        #     return False
         if diff>cs.restorenum:
             flash("取消数量大于材料修好入库数量")
             return False
@@ -301,7 +323,8 @@ def customerservice_change_num(cs,m,oprtype,diff,batch):
             b=Rework(num=diff,batch=batch,service_id=cs.service_id,material_id=m.material_id)
         else:
             b.num += diff
-        m.storenum-=diff
+        db.session.add(b)
+        m.restorenum-=diff
         cs.reworknum+=diff
         cs.restorenum-=diff
     elif oprtype == Oprenum.CSSCRAP.name: #7
@@ -338,6 +361,8 @@ def rollback():
         if customerservice_isvalid_num(cs=cs,m=m,oprtype=opr.oprtype,diff=opr.diff,batch=opr.oprbatch):
             customerservice_change_num(cs=cs,m=m,oprtype=opr.oprtype,diff=opr.diff,batch=opr.oprbatch)
             db.session.add(cs)
+            copr=CancelOpr(opr)
+            db.session.add(copr)
             db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
             db.session.commit()
             db.session.flush()
@@ -347,6 +372,8 @@ def rollback():
         # if opr.isgroup == True:
         if opr.oprtype == Oprenum.INITADD.name :
             materialid=opr.material_id
+            copr=CancelOpr(opr)
+            db.session.add(copr)
             db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
             db.session.query(Material).filter_by(material_id=opr.material_id).delete()
             db.session.commit()
@@ -363,10 +390,14 @@ def rollback():
                 else:
                     cs.originnum -= opr.diff
                     if cs.originnum == 0:
+                        copr = CancelOpr(opr)
+                        db.session.add(copr)
                         db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
                         db.session.query(Customerservice).filter(Customerservice.service_id == opr.service_id ).delete()
                     else:
                         db.session.add_all([cs])
+                        copr = CancelOpr(opr)
+                        db.session.add(copr)
                         db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
                     db.session.commit()
                     db.session.flush()
@@ -385,6 +416,8 @@ def rollback():
                 m.storenum += opr.diff
                 m.resalenum -= opr.diff
                 cs.resalenum -= opr.diff
+                copr = CancelOpr(opr)
+                db.session.add(copr)
                 db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
                 db.session.query(Customerservice).filter(Customerservice.service_id == opr.service_id).delete()
                 # cs.restorenum += diff
@@ -398,6 +431,8 @@ def rollback():
             if m != None:
                 if material_isvalid_num_rev(m=m,device_id=opr.device_id,diff=opr.diff, batch=str(opr.oprbatch), oprtype=opr.oprtype):
                     material_change_num_rev(m=m,device_id=opr.device_id,diff=opr.diff, batch=str(opr.oprbatch), oprtype=opr.oprtype)
+                    copr = CancelOpr(opr)
+                    db.session.add(copr)
                     db.session.query(Opr).filter_by(opr_id=opr.opr_id).delete()
                     db.session.commit()
                     db.session.flush()

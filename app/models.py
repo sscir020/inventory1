@@ -94,7 +94,36 @@ class Opr(db.Model):
     def prt(self):
         print(self.opr_id, self.user_id, self.diff, self.material_id)
 
+class CancelOpr(db.Model):
+    __tablename__ = 'cancel_oprs'
+    opr_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    user_id = db.Column(db.Integer)
+    diff = db.Column(db.Integer, nullable=False)
+    MN_id = db.Column(db.String(32), nullable=True, default='')
+    material_id = db.Column(db.Integer)
+    device_id = db.Column(db.String(16))
+    client_id = db.Column(db.Integer)
+    service_id = db.Column(db.Integer)
+    oprtype = db.Column(db.String(32), nullable=False)
+    oprbatch = db.Column(db.String(32), nullable=False, default='')
+    isgroup = db.Column(db.Boolean, nullable=False, default=0)
+    comment = db.Column(db.String(64), nullable=True, default='')
+    momentary = db.Column(db.DateTime, index=True,default=datetime.datetime.now())  # .strftime("%Y-%m-%d %H:%M:%S")
 
+    def __init__(self,opr):
+        self.opr_id = opr.opr_id
+        self.user_id = opr.user_id
+        self.diff = opr.diff
+        self.MN_id = opr.MN_id
+        self.material_id = opr.material_id
+        self.device_id = opr.device_id
+        self.client_id = opr.client_id
+        self.service_id = opr.service_id
+        self.oprtype = opr.oprtype
+        self.oprbatch = opr.oprbatch
+        self.isgroup = opr.isgroup
+        self.comment = opr.comment
+        self.momentary = opr.momentary
 #
 # class Device(db.Model):
 #     __tablename__='devices'
@@ -154,7 +183,7 @@ class Web_device(db.Model):
     creator = db.Column(db.Integer,nullable = True, default = 'null')
     contractor = db.Column(db.String(255),nullable = True, default='')
     install_dt = db.Column(db.DateTime,nullable = True, default = 'null')
-    video = db.Column(db.String(255),nullable = True, default = 'null')
+    # video = db.Column(db.String(255),nullable = True, default = 'null')
 
 
 

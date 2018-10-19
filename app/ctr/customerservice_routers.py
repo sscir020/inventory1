@@ -51,14 +51,14 @@ def form_change_customerservice():
                                     cs.goodnum=cs.originnum-diff
                                     cs.brokennum=diff
                                     o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id,material_id=material_id, diff=diff, user_id=session['userid'],oprtype=oprtype,
-                                            isgroup=True, oprbatch=cs.batch, comment=comment, momentary=datetime.datetime.now())
+                                            isgroup=True, oprbatch=cs.batch, comment=cs.comment, momentary=datetime.datetime.now())
                                     db.session.add_all([cs,o])
                                     db.session.commit()
                                     db.session.flush()
                                     db.session.close()
                                     flash("设备损坏更新成功")
                                     j+=1
-                                    return redirect(url_for("ctr.form_change_customerservice"))
+
                                 else:
                                     if diff > cs.goodnum:
                                         flash("损坏数量大于售后带回数量")
@@ -67,14 +67,14 @@ def form_change_customerservice():
                                         cs.goodnum-=diff
                                         cs.brokennum+=diff
                                         o = Opr(device_id=device_id, MN_id=device_id,service_id=service_id,material_id=material_id,  diff=diff, user_id=session['userid'],oprtype=oprtype,
-                                                isgroup=True, oprbatch=cs.batch, comment=comment, momentary=datetime.datetime.now())
+                                                isgroup=True, oprbatch=cs.batch, comment=cs.comment, momentary=datetime.datetime.now())
                                         db.session.add_all([cs,o])
                                         db.session.commit()
                                         db.session.flush()
                                         db.session.close()
                                         flash("设备损坏更新成功")
                                         j += 1
-                                        return redirect(url_for("ctr.form_change_customerservice"))
+
                                         # else:
                                         #     flash("损害的数量大于售后带回总数量")
                         elif oprtype == Oprenum.CSREWORK.name:#20
@@ -104,7 +104,7 @@ def form_change_customerservice():
                                 db.session.close()
                                 flash("售后返修成功")
                                 j += 1
-                                return redirect(url_for("ctr.form_change_customerservice"))
+
                         elif oprtype == Oprenum.CSGINBOUND.name:#21
                             if diff <= 0:
                                 flash("应该填写正数")
@@ -124,14 +124,14 @@ def form_change_customerservice():
                                         cs.inboundnum += diff
                                         m.storenum += diff
                                         o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, material_id=material_id, diff=diff, user_id=session['userid'],oprtype=oprtype,
-                                                isgroup=True, oprbatch=cs.batch, comment=comment,momentary=datetime.datetime.now())
+                                                isgroup=True, oprbatch=cs.batch, comment=cs.comment,momentary=datetime.datetime.now())
                                         db.session.add_all([m,cs,o])
                                         db.session.commit()
                                         db.session.flush()
                                         db.session.close()
                                         flash("完好入库成功")
                                         j += 1
-                                        return redirect(url_for("ctr.form_change_customerservice"))
+
                                     else:
                                         flash("材料不存在")
                                         db.session.close()
@@ -141,27 +141,27 @@ def form_change_customerservice():
                             else:
                                 cs.fee+=diff
                                 o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id,material_id=material_id, diff=diff, user_id=session['userid'],oprtype=oprtype,
-                                        isgroup=True, oprbatch=cs.batch, comment=comment, momentary=datetime.datetime.now())
+                                        isgroup=True, oprbatch=cs.batch, comment=cs.comment, momentary=datetime.datetime.now())
                                 db.session.add_all([cs,o])
                                 db.session.commit()
                                 db.session.flush()
                                 db.session.close()
                                 flash("增加费用成功")
                                 j += 1
-                                return redirect(url_for("ctr.form_change_customerservice"))
+
                         elif oprtype == Oprenum.CSFEEZERO.name:  # 22
                             if session['role']>1:
                                 temp=cs.fee
                                 cs.fee = 0
                                 o = Opr(device_id=device_id, MN_id=device_id,service_id=service_id,material_id=material_id,  diff=temp, user_id=session['userid'], oprtype=oprtype,
-                                        isgroup=True, oprbatch=cs.batch, comment=comment, momentary=datetime.datetime.now())
+                                        isgroup=True, oprbatch=cs.batch, comment=cs.comment, momentary=datetime.datetime.now())
                                 db.session.add_all([cs, o])
                                 db.session.commit()
                                 db.session.flush()
                                 db.session.close()
                                 flash("欠费清零成功")
                                 j += 1
-                                return redirect(url_for("ctr.form_change_customerservice"))
+
                             else:
                                 flash("没有足够权限")
                         elif oprtype==Oprenum.COMMENT.name:
@@ -172,10 +172,11 @@ def form_change_customerservice():
                             db.session.close()
                             flash("备注修改成功")
                             j += 1
-                            return redirect(url_for("ctr.form_change_customerservice"))
+
                         else:
                             flash("操作类型错误")
             flash("共选了" + str(i) + "条，" + str(j) + "条更新成功，" + str(i - j) + "条更新失败")
+            return redirect(url_for("ctr.form_change_customerservice"))
     # db.session.flush()
 
     page = request.args.get('page', 1, type=int)

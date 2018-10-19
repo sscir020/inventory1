@@ -31,7 +31,9 @@ class ChangeMaterialForm(Form):#7
     material_id=IntegerField("材料id",validators=[DataRequired()])
     diff=IntegerField("数量",validators=[DataRequired(),NumberRange(min=1)])
     oprtype = SelectField("提交", choices=[(Oprenum.BUY.name, '购买'), (Oprenum.REWORK.name, '返修'),(Oprenum.PREPARE.name, "备货"), (Oprenum.OUTBOUND.name, "出库"),
-                                         (Oprenum.RECYCLE.name, "材料售后带回"), (Oprenum.RESALE.name, "材料售后带出"),(Oprenum.ALTERNAME.name,'修改材料名称'),(Oprenum.COMMENT.name,'修改备注')])
+                                         (Oprenum.RECYCLE.name, "材料售后带回"), (Oprenum.RESALE.name, "材料售后带出"),
+                                         (Oprenum.SHREWORK.name, '二手返修'), (Oprenum.SHPREPARE.name, "二手备货"), (Oprenum.SHRESALE.name, "二手材料售后带出"),
+                                         (Oprenum.ALTERNAME.name,'修改材料名称'),(Oprenum.COMMENT.name,'修改备注')])
     device_id=StringField("设备号")
     comment=StringField("备注")
     condition = StringField("筛选条件")

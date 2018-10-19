@@ -10,12 +10,12 @@ from .material_routers import change_materials_oprs_db,convert_str_num
 import datetime
 
 @ctr.route('/form_change_buy_act',methods=['GET','POST'])
-# @loggedin_required
+@loggedin_required
 def form_change_buy():
     form=BuyMaterialForm(request.form)
     if request.method=="POST":
-        print(request.form)
-        print(form)
+        # print(request.form)
+        # print(form)
         # diff=form.diff.data
         ischecked=False
         for key in request.form.keys():
@@ -35,24 +35,24 @@ def form_change_buy():
                     comment=form.comment.data
                     # buy_id=form.buy_id.data
                     # Prt.prt(buy_id,diff,oprtype,comment)
-                    buy=db.session.query(Buy).filter(Buy.buy_id==buy_id).first()
-                    if buy==None:
+                    b=db.session.query(Buy).filter(Buy.buy_id==buy_id).first()
+                    if b==None:
                         flash("订单不存在")
                         db.session.close()
                     else:
-                        materialid=buy.material_id
-                        batch=buy.batch
+                        materialid=b.material_id
+                        batch=b.batch
                         if oprtype==Oprenum.INBOUND.name:
                             if diff <= 0:
                                 flash("应该填写正数")
-                            elif change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
+                            elif change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=b.comment):
                                 flash("入库更新成功")
                                 j+=1
-                                return redirect(url_for("ctr.form_change_buy"))
+
                             else:
                                 flash("入库更新错误")
                         elif oprtype==Oprenum.CANCELBUY.name:
-                            b = db.session.query(Buy).filter(Buy.batch == batch).first()
+                            # b = db.session.query(Buy).filter(Buy.batch == batch).first()
                             diff = b.num
                             o = Opr(material_id=materialid,device_id='',MN_id='', diff=diff, user_id=session['userid'],
                                     oprtype=Oprenum.CANCELBUY.name, isgroup=True, oprbatch=batch, comment=b.comment, \
@@ -64,9 +64,9 @@ def form_change_buy():
                             db.session.close()
                             flash("订单取消成功")
                             j+=1
-                            return redirect(url_for("ctr.form_change_buy"))
+
                         elif oprtype==Oprenum.COMMENT.name:
-                            b = db.session.query(Buy).filter(Buy.batch == batch).first()
+                            # b = db.session.query(Buy).filter(Buy.batch == batch).first()
                             b.comment=comment
                             db.session.add(b)
                             db.session.commit()
@@ -74,10 +74,11 @@ def form_change_buy():
                             db.session.close()
                             flash("备注修改成功")
                             j+=1
-                            return redirect(url_for("ctr.form_change_buy"))
+
                         else:
                             flash("操作类型错误")
             flash("共选了"+str(i)+"条，"+str(j)+"条更新成功，"+str(i-j)+"条更新失败")
+            return redirect(url_for("ctr.form_change_buy"))
     # print(request)
     # flash('购买列表')
     page = request.args.get('page',1,type=int)
@@ -116,7 +117,7 @@ def customerservice_change_num(cs,m,diff, oprtype, batch,device_id):
     if oprtype == Oprenum.CSRESTORE.name:
         b = db.session.query(Rework).filter(Rework.batch == batch).first()
         b.num -= diff
-        m.storenum+=diff
+        m.restorenum+=diff
         cs.reworknum-=diff
         cs.restorenum+=diff
         if b.num == 0:
@@ -165,7 +166,7 @@ def change_customerservice_oprs_db(oprtype,materialid, service_id,device_id,diff
     return True
 
 @ctr.route('/form_change_rework_act', methods=['GET', 'POST'])
-# @loggedin_required
+@loggedin_required
 def form_change_rework():
     form=ReworkForm(request.form)
     if request.method=="POST":
@@ -202,10 +203,10 @@ def form_change_rework():
                             elif service_id != None:
                                 flash("请选择售后")
                             else:
-                                if change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
+                                if change_materials_oprs_db(oprtype=oprtype, materialid=materialid, device_id='',diff=diff, isgroup=True,batch=batch, comment=r.comment):
                                     flash("返修列表-修好更新成功")
                                     j+=1
-                                    return redirect(url_for("ctr.form_change_rework"))
+
                                 else:
                                     flash("返修列表-修好更新失败")
                         elif oprtype==Oprenum.SCRAP.name:
@@ -214,10 +215,10 @@ def form_change_rework():
                             elif service_id != None:
                                 flash("请选择售后")
                             else:
-                                if change_materials_oprs_db(oprtype=oprtype, materialid=materialid,  device_id='',diff=diff, isgroup=True,batch=batch, comment=comment):
+                                if change_materials_oprs_db(oprtype=oprtype, materialid=materialid,  device_id='',diff=diff, isgroup=True,batch=batch, comment=r.comment):
                                     flash("返修列表-报废更新成功")
                                     j += 1
-                                    return redirect(url_for("ctr.form_change_rework"))
+
                                 else:
                                     flash("返修列表-报废更新失败")
                         elif oprtype == Oprenum.CSRESTORE.name:
@@ -225,10 +226,10 @@ def form_change_rework():
                             if diff <= 0:
                                 flash("应该填写正数")
                             elif service_id!=None:
-                                if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id,diff=diff, isgroup=True,batch=batch, comment=comment):
+                                if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id,diff=diff, isgroup=True,batch=batch, comment=r.comment):
                                     flash("返修列表-售后修好更新成功")
                                     j += 1
-                                    return redirect(url_for("ctr.form_change_rework"))
+
                                 else:
                                     flash("返修列表-售后修好更新失败")
                             else:
@@ -237,10 +238,10 @@ def form_change_rework():
                             if diff <= 0:
                                 flash("应该填写正数")
                             elif service_id != None:
-                                if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id, diff=diff, isgroup=True, batch=batch, comment=comment):
+                                if change_customerservice_oprs_db(oprtype=oprtype, materialid=materialid, service_id=service_id,device_id=device_id, diff=diff, isgroup=True, batch=batch, comment=r.comment):
                                     flash("返修列表-售后报废更新成功")
                                     j += 1
-                                    return redirect(url_for("ctr.form_change_rework"))
+
                                 else:
                                     flash("返修列表-售后报废更新失败")
                             else:
@@ -254,10 +255,10 @@ def form_change_rework():
                             db.session.close()
                             flash("备注修改成功")
                             j += 1
-                            return redirect(url_for("ctr.form_change_rework"))
                         else:
                             flash("操作类型错误")
             flash("共选了" + str(i) + "条，" + str(j) + "条更新成功，" + str(i - j) + "条更新失败")
+            return redirect(url_for("ctr.form_change_rework"))
     # flash('返修列表')
     # db.session.flush()
     page = request.args.get('page',1,type=int)

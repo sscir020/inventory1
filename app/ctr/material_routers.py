@@ -75,6 +75,10 @@ def material_isvalid_num(m,diff,oprtype,batch,device_id):
         if diff>m.storenum:
             flash("返修数量大于库存数量"+str(diff)+">"+str(m.storenum))
             return False
+    elif oprtype == Oprenum.SHREWORK.name:#4
+        if diff>m.restorenum:
+            flash("返修数量大于修好库存数量"+str(diff)+">"+str(m.restorenum))
+            return False
     elif oprtype==Oprenum.INBOUND.name:#8#####5
         b=db.session.query(Buy).filter(Buy.batch==batch).first()
         if b == None:
@@ -111,10 +115,18 @@ def material_isvalid_num(m,diff,oprtype,batch,device_id):
         if diff>m.storenum:
             flash("售后带出数量大于库存数量"+str(diff)+">"+str(m.storenum))
             return False
+    elif oprtype == Oprenum.SHRESALE.name:#9
+        if device_id == '':
+            flash("需要填写设备ID"+str(device_id))
+            return False
+        if diff>m.restorenum:
+            flash("售后带出数量大于修好库存数量"+str(diff)+">"+str(m.restorenum))
+            return False
     elif oprtype == Oprenum.RECYCLE.name:#10
         if device_id == '':
             flash("需要填写设备ID"+str(device_id))
             return False
+
         # c = db.session.query(Customerservice).filter(Customerservice.MN_id == MN_id).first()
         # if c != None:
         #     flash("售后带回设备已存在"+str(MN_id))
@@ -124,7 +136,10 @@ def material_isvalid_num(m,diff,oprtype,batch,device_id):
         if diff>m.storenum:
             flash("备货数量大于库存数量"+str(diff)+">"+str(m.storenum))
             return False
-
+    elif oprtype == Oprenum.SHPREPARE.name:#11
+        if diff>m.restorenum:
+            flash("备货数量大于修好库存数量"+str(diff)+">"+str(m.restorenum))
+            return False
     else:
         flash("操作类型错误_判断"+str(oprtype))
         return False
@@ -157,6 +172,17 @@ def material_change_num(m,diff,oprtype,batch,device_id):
                 b = db.session.query(Rework).filter(Rework.batch == batch).first()
             b=Rework(batch=batch,material_id=m.material_id,num=diff)
             m.storenum -= diff
+            db.session.add(b)
+            value = batch
+        elif oprtype == Oprenum.SHREWORK.name:#-->#3
+            batch=datetime.datetime.now()
+            b = db.session.query(Rework).filter(Rework.batch == batch).first()
+            while b!=None:
+                m.sleep(1)
+                batch = datetime.datetime.now()
+                b = db.session.query(Rework).filter(Rework.batch == batch).first()
+            b=Rework(batch=batch,material_id=m.material_id,num=diff)
+            m.restorenum -= diff
             db.session.add(b)
             value = batch
         elif oprtype==Oprenum.INBOUND.name:#####4#####4
@@ -197,10 +223,15 @@ def material_change_num(m,diff,oprtype,batch,device_id):
              pass
         #     m.storenum-=diff
         #     m.resalenum+=diff
+        elif oprtype == Oprenum.SHRESALE.name:#8
+             pass
         elif oprtype == Oprenum.RECYCLE.name:#9
             pass
         elif oprtype == Oprenum.PREPARE.name:#10
             m.storenum-=diff
+            m.preparenum+=diff
+        elif oprtype == Oprenum.SHPREPARE.name:#10
+            m.restorenum-=diff
             m.preparenum+=diff
         else:
             flash("操作类型错误_变量"+str(oprtype))
@@ -244,41 +275,45 @@ def change_materials_oprs_db(oprtype,materialid,device_id,diff,isgroup,batch,com
                 db.session.flush()
                 db.session.close()
                 return True
-        elif oprtype==Oprenum.RESALE.name:#8
+        elif oprtype==Oprenum.RESALE.name or oprtype==Oprenum.SHRESALE.name:#8
             d=db.session.query(Web_device).filter(Web_device.device_id==device_id).first()
             if d==None:
                 flash("设备不存在")
                 return False
             else:
-                if diff > m.storenum:
-                    flash("库存或者售后修好不足")
+                if oprtype==Oprenum.RESALE.name  and diff > m.storenum:
+                    flash("库存不足")
                     return False
-                else:
+                if oprtype==Oprenum.SHRESALE.name and diff > m.restorenum:
+                    flash("修好库存不足")
+                    return False
+                batch = datetime.datetime.now()
+                b = db.session.query(Customerservice).filter(Customerservice.batch == batch).first()
+                while b != None:
+                    m.sleep(1)
                     batch = datetime.datetime.now()
                     b = db.session.query(Customerservice).filter(Customerservice.batch == batch).first()
-                    while b != None:
-                        m.sleep(1)
-                        batch = datetime.datetime.now()
-                        b = db.session.query(Customerservice).filter(Customerservice.batch == batch).first()
-                    cs = Customerservice(material_id=m.material_id, material_name=m.material_name, device_id=device_id,
-                                         batch=batch, originnum=0, resalenum=diff)
-                    db.session.add(cs)
-                    db.session.flush()
+                cs = Customerservice(material_id=m.material_id, material_name=m.material_name, device_id=device_id,
+                                     batch=batch, originnum=0, resalenum=diff)
+                db.session.add(cs)
+                db.session.flush()
 
+                if oprtype == Oprenum.RESALE.name:
                     m.storenum -= diff
-                    m.resalenum += diff
-                    # cs.restorenum-=diff
-                    # cs.resalenum+=diff
-                    o = Opr(material_id=materialid, device_id=device_id, MN_id=device_id, service_id=cs.service_id,
-                            diff=diff, user_id=session['userid'],
-                            oprtype=oprtype, isgroup=isgroup, oprbatch=batch, comment=comment,
-                            momentary=datetime.datetime.now())
-                    db.session.add_all([m, o])
-                    db.session.commit()
-                    db.session.flush()
-                    db.session.close()
-                    return True
-
+                elif oprtype == Oprenum.SHRESALE.name:
+                    m.restorenum -= diff
+                m.resalenum += diff
+                # cs.restorenum-=diff
+                # cs.resalenum+=diff
+                o = Opr(material_id=materialid, device_id=device_id, MN_id=device_id, service_id=cs.service_id,
+                        diff=diff, user_id=session['userid'],
+                        oprtype=oprtype, isgroup=isgroup, oprbatch=batch, comment=comment,
+                        momentary=datetime.datetime.now())
+                db.session.add_all([m, o])
+                db.session.commit()
+                db.session.flush()
+                db.session.close()
+                return True
         else:
             value=material_change_num(m=m,diff=diff, oprtype=oprtype, batch=batch,device_id=device_id)
             o = Opr(material_id=materialid, device_id=device_id,MN_id=device_id, diff=diff, user_id=session['userid'], oprtype=oprtype, isgroup=isgroup,
@@ -327,28 +362,41 @@ def form_change_material():
                         if oprtype==Oprenum.BUY.name:#1
                             if diff <= 0:
                                 flash("应该填写正数")
-                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id='',diff=diff,isgroup=True, batch='', comment='')==True:
+                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id='',diff=diff,isgroup=True, batch='', comment=comment)==True:
                                 flash("购买列表数量更新成功")
                                 j+=1
-                                return redirect(url_for("ctr.form_change_material"))
                             else:
                                 flash("购买列表数量更新失败")
                         elif oprtype == Oprenum.REWORK.name:#2
                             if diff <= 0:
                                 flash("应该填写正数")
-                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id='',diff=diff,isgroup=True, batch='',  comment='')==True:
+                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id='',diff=diff,isgroup=True, batch='',  comment=comment)==True:
                                 flash("返修列表数量更新成功")
                                 j += 1
-                                return redirect(url_for("ctr.form_change_material"))
+                            else:
+                                flash("返修列表数量更新失败")
+                        elif oprtype == Oprenum.SHREWORK.name:#2
+                            if diff <= 0:
+                                flash("应该填写正数")
+                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id='',diff=diff,isgroup=True, batch='',  comment=comment)==True:
+                                flash("返修列表数量更新成功")
+                                j += 1
                             else:
                                 flash("返修列表数量更新失败")
                         elif oprtype == Oprenum.PREPARE.name:#3
                             if diff <= 0:
                                 flash("应该填写正数")
-                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id,device_id='',  diff=diff, isgroup=True, batch='', comment='') == True:
+                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id,device_id='',  diff=diff, isgroup=True, batch='', comment=comment) == True:
                                 flash("备货数量更新成功")
                                 j += 1
-                                return redirect(url_for("ctr.form_change_material"))
+                            else:
+                                flash("备货数量更新失败")
+                        elif oprtype == Oprenum.SHPREPARE.name:#3
+                            if diff <= 0:
+                                flash("应该填写正数")
+                            elif change_materials_oprs_db(oprtype=oprtype, materialid=material_id,device_id='',  diff=diff, isgroup=True, batch='', comment=comment) == True:
+                                flash("备货数量更新成功")
+                                j += 1
                             else:
                                 flash("备货数量更新失败")
                         elif oprtype==Oprenum.OUTBOUND.name:#4
@@ -361,10 +409,10 @@ def form_change_material():
                                 if d == None:
                                     flash("设备不存在")
                                 else:
-                                    if change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id=device_id,diff=diff,isgroup=True, batch='',  comment='') == True:
+                                    if change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id=device_id,diff=diff,isgroup=True, batch='',  comment=comment) == True:
                                         flash("出库数量更新成功")
                                         j += 1
-                                        return redirect(url_for("ctr.form_change_material"))
+
                                     else:
                                         flash("出库数量更新失败")
                         elif oprtype == Oprenum.RECYCLE.name:#5
@@ -377,10 +425,10 @@ def form_change_material():
                                 if d == None:
                                     flash("设备不存在")
                                 else:
-                                    if change_materials_oprs_db(oprtype=oprtype, materialid=material_id,device_id=device_id, diff=diff,isgroup=True, batch='',  comment='')==True:
+                                    if change_materials_oprs_db(oprtype=oprtype, materialid=material_id,device_id=device_id, diff=diff,isgroup=True, batch='',  comment=comment)==True:
                                          flash("售后带回到售后列表数量更新成功")
                                          j += 1
-                                         return redirect(url_for("ctr.form_change_material"))
+
                                     else:
                                         flash("售后带回到售后列表数量更新失败")
                         elif oprtype == Oprenum.RESALE.name:#6
@@ -393,10 +441,25 @@ def form_change_material():
                                 if d == None:
                                     flash("设备不存在")
                                 else:
-                                    if change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id=device_id,diff=diff,isgroup=True, batch='', comment='')==True:
+                                    if change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id=device_id,diff=diff,isgroup=True, batch='', comment=comment)==True:
                                         flash("售后带出列表数量更新成功")
                                         j += 1
-                                        return redirect(url_for("ctr.form_change_material"))
+
+                                    else:
+                                        flash("售后带出列表数量更新失败")
+                        elif oprtype == Oprenum.SHRESALE.name:#6
+                            if diff <= 0:
+                                flash("应该填写正数")
+                            elif device_id=='':
+                                flash("需要填写设备ID")
+                            else:
+                                d = db.session.query(Web_device).filter(Web_device.device_id == device_id).first()
+                                if d == None:
+                                    flash("设备不存在")
+                                else:
+                                    if change_materials_oprs_db(oprtype=oprtype, materialid=material_id, device_id=device_id,diff=diff,isgroup=True, batch='', comment=comment)==True:
+                                        flash("售后带出列表数量更新成功")
+                                        j += 1
                                     else:
                                         flash("售后带出列表数量更新失败")
                         elif oprtype==Oprenum.COMMENT.name:
@@ -407,7 +470,6 @@ def form_change_material():
                             db.session.close()
                             flash("备注修改成功")
                             j += 1
-                            return redirect(url_for("ctr.form_change_material"))
                         elif oprtype == Oprenum.ALTERNAME.name:
                             m = db.session.query(Material).filter(Material.material_id == material_id).first()
                             m.material_name = comment
@@ -417,10 +479,10 @@ def form_change_material():
                             db.session.close()
                             flash("名称修改成功")
                             j += 1
-                            return redirect(url_for("ctr.form_change_material"))
                         else:
                             flash("错误的操作类型")
             flash("共选了"+str(i)+"条，"+str(j)+"条更新成功，"+str(i-j)+"条更新失败")
+            return redirect(url_for("ctr.form_change_material"))
     # print(request.url)
     # print(session)
     # flash('库存列表')

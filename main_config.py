@@ -63,11 +63,13 @@ class Oprenum(Enum):
     # DPREPARE=13
     # DOUTBOUND=14
     # CINITADD=16
-    # CSRINBOUND=18
+    CSRINBOUND=19
     # RINBOUND =24
+
     SHREWORK=25
     SHPREPARE=26
     SHRESALE=27
+    STOCKING = 28
     ALTERNAME = 31
     COMMENT = 32
 oprenumCH ={
@@ -88,7 +90,7 @@ oprenumCH ={
     # Oprenum.CSDRECYCLE.name:'设备售后带回',
     # Oprenum.CINITADD.name:'新添加客户',#
     Oprenum.CSGINBOUND.name:'材料售后完好入库',
-    # Oprenum.CSRINBOUND.name:'材料售后修好入库',
+    Oprenum.CSRINBOUND.name:'材料售后修好入库',
     Oprenum.CSREWORK.name:'材料售后返修',
     Oprenum.CSRESTORE.name:'材料售后修好',
     Oprenum.CSSCRAP.name:'材料售后报废',#
@@ -102,6 +104,7 @@ oprenumCH ={
     Oprenum.SHREWORK.name:'二手返修',
     Oprenum.SHPREPARE.name:'二手备货',
     Oprenum.SHRESALE.name:'二手材料售后带出',
+    Oprenum.STOCKING.name:'库存盘点',
     Oprenum.ALTERNAME.name:'修改材料名称',
     Oprenum.COMMENT.name:'备注',
 }
@@ -123,7 +126,7 @@ oprenumNum = {
     # '设备售后带回':Oprenum.CSDRECYCLE,
     # '新添加客户':Oprenum.CINITADD,
     '材料售后完好入库':Oprenum.CSGINBOUND,#
-    # '材料售后修好入库':Oprenum.CSRINBOUND,#
+    '材料售后修好入库':Oprenum.CSRINBOUND,#
     '材料售后返修':Oprenum.CSREWORK,
     '材料售后修好': Oprenum.CSRESTORE,
     '材料售后报废':Oprenum.CSSCRAP,
@@ -137,6 +140,7 @@ oprenumNum = {
     '二手返修':Oprenum.SHREWORK.name,
     '二手备货':Oprenum.SHPREPARE.name,
     '二手材料售后带出':Oprenum.SHRESALE.name,
+    '库存盘点':Oprenum.STOCKING.name,
     '修改材料名称':Oprenum.ALTERNAME,
     '备注':Oprenum.COMMENT,
 }

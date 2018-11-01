@@ -14,8 +14,10 @@ import datetime
 @loggedin_required
 def form_change_customerservice():
     form = CustomerserviceForm(request.form)
+    condition = None
     if request.method == "POST":
         ischecked = False
+        condition = form.condition.data
         for key in request.form.keys():
             if "input_checkbox" in key:
                 ischecked=True
@@ -114,13 +116,6 @@ def form_change_customerservice():
                                 else:
                                     m = db.session.query(Material).filter(Material.material_id == material_id).first()
                                     if m!= None:
-                                        # if diff > cs.goodnum:
-                                        #     flash("入库数量大于售后完好数量" + str(diff) + ">" + str(cs.goodnum))
-                                        #     return False
-                                        # if cs.inboundnum + diff > cs.goodnum + cs.restorenum:
-                                        #     flash("入库数量大于售后带回数量" + str(diff) + str(cs.inboundnum) + ">" + str(cs.goodnum) + str(cs.restorenum))
-                                        #     return False
-                                        # cs.goodnum -= diff
                                         cs.inboundnum += diff
                                         m.storenum += diff
                                         o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, material_id=material_id, diff=diff, user_id=session['userid'],oprtype=oprtype,
@@ -132,6 +127,28 @@ def form_change_customerservice():
                                         flash("完好入库成功")
                                         j += 1
 
+                                    else:
+                                        flash("材料不存在")
+                                        db.session.close()
+                        elif oprtype == Oprenum.CSRINBOUND.name:#21
+                            if diff <= 0:
+                                flash("应该填写正数")
+                            else:
+                                if material_id == None:
+                                    flash("不是材料")
+                                else:
+                                    m = db.session.query(Material).filter(Material.material_id == material_id).first()
+                                    if m!= None:
+                                        cs.restorenum += diff
+                                        m.restorenum += diff
+                                        o = Opr(device_id=device_id, MN_id=device_id, service_id=service_id, material_id=material_id, diff=diff, user_id=session['userid'],oprtype=oprtype,
+                                                isgroup=True, oprbatch=cs.batch, comment=cs.comment,momentary=datetime.datetime.now())
+                                        db.session.add_all([m,cs,o])
+                                        db.session.commit()
+                                        db.session.flush()
+                                        db.session.close()
+                                        flash("修好入库成功")
+                                        j += 1
                                     else:
                                         flash("材料不存在")
                                         db.session.close()
@@ -181,7 +198,7 @@ def form_change_customerservice():
 
     page = request.args.get('page', 1, type=int)
 
-    pagination = db.session.query(Customerservice).order_by(Customerservice.service_id.desc()).paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
+    pagination = db.session.query(Customerservice).filter(Customerservice.material_name.like('%'+condition+'%') if condition is not None else "").order_by(Customerservice.service_id.desc()).paginate(page,per_page=current_app.config['FLASK_NUM_PER_PAGE'],error_out=False)
     customerservice=pagination.items
 
     db.session.close()

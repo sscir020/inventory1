@@ -140,6 +140,8 @@ def material_isvalid_num(m,diff,oprtype,batch,device_id):
         if diff>m.restorenum:
             flash("备货数量大于修好库存数量"+str(diff)+">"+str(m.restorenum))
             return False
+    elif oprtype == Oprenum.STOCKING.name:  # ****#11
+        pass
     else:
         flash("操作类型错误_判断"+str(oprtype))
         return False
@@ -233,6 +235,8 @@ def material_change_num(m,diff,oprtype,batch,device_id):
         elif oprtype == Oprenum.SHPREPARE.name:#10
             m.restorenum-=diff
             m.preparenum+=diff
+        elif oprtype==Oprenum.STOCKING.name:#****#11
+            m.storenum=diff
         else:
             flash("操作类型错误_变量"+str(oprtype))
             value='-1'
@@ -399,6 +403,7 @@ def form_change_material():
                                 j += 1
                             else:
                                 flash("备货数量更新失败")
+
                         elif oprtype==Oprenum.OUTBOUND.name:#4
                             if diff <= 0:
                                 flash("应该填写正数")
@@ -462,6 +467,25 @@ def form_change_material():
                                         j += 1
                                     else:
                                         flash("售后带出列表数量更新失败")
+                        elif oprtype == Oprenum.STOCKING.name:
+                            if diff <= 0:
+                                flash("应该填写正数")
+                            else:
+                                m = db.session.query(Material).filter(Material.material_id == material_id).first()
+                                if m != None:
+                                    pre=m.storenum
+                                    m.storenum = diff
+                                    o = Opr(material_id=material_id, device_id='', MN_id='', diff=pre,user_id=session['userid'], oprtype=oprtype, isgroup=1,
+                                            oprbatch='', comment=comment, momentary=datetime.datetime.now())
+                                    db.session.add_all([m,o])
+                                    db.session.commit()
+                                    db.session.flush()
+                                    db.session.close()
+                                    flash("库存盘点修改成功")
+                                    j += 1
+                                else:
+                                    flash("材料名不存在")
+                                    flash("库存盘点修改失败")
                         elif oprtype==Oprenum.COMMENT.name:
                             m.comment=comment
                             db.session.add(m)
@@ -479,6 +503,7 @@ def form_change_material():
                             db.session.close()
                             flash("名称修改成功")
                             j += 1
+
                         else:
                             flash("错误的操作类型")
             flash("共选了"+str(i)+"条，"+str(j)+"条更新成功，"+str(i-j)+"条更新失败")

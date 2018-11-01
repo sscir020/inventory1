@@ -176,6 +176,8 @@ def material_isvalid_num_rev (m,device_id,diff,oprtype,batch):
         if diff>m.preparenum:
             flash("取消备货数量大于备货数量")
             return False
+    elif oprtype == Oprenum.STOCKING.name:  # 10
+        pass
     else:
         flash("操作类型错误")
         return False
@@ -242,6 +244,8 @@ def material_change_num_rev(m,device_id,diff,oprtype,batch):
     elif oprtype == Oprenum.SHPREPARE.name:#10
         m.restorenum+=diff
         m.preparenum-=diff
+    elif oprtype == Oprenum.STOCKING.name:#10
+        m.storenum=diff
     else:
         flash("操作类型错误")
         value='-1'
@@ -263,6 +267,13 @@ def customerservice_isvalid_num(cs,m,oprtype,diff,batch):
             return False
         if diff>cs.inboundnum:
             flash("取消数量大于材料售后完好入库数量")
+            return False
+    elif oprtype == Oprenum.CSRINBOUND.name:  # 3
+        if diff > m.restorenum:
+            flash("取消数量大于材料库存数量")
+            return False
+        if diff > cs.restorenum:
+            flash("取消数量大于材料售后修好入库数量")
             return False
     # elif oprtype == Oprenum.CSDRESTORE.name:  # 4
     #     if 1>cs.restorenum:
@@ -308,6 +319,10 @@ def customerservice_change_num(cs,m,oprtype,diff,batch):
         # cs.goodnum += diff
         cs.inboundnum -=diff
         m.storenum -= diff
+    elif oprtype == Oprenum.CSRINBOUND.name:  # 3
+        # cs.goodnum += diff
+        cs.restorenum -=diff
+        m.restorenum -= diff
     # elif oprtype == Oprenum.CSDRESTORE.name:  # 4
     #     cs.brokennum += 1
     #     cs.restorenum -= 1
